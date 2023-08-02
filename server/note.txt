@@ -1,0 +1,7 @@
+1. Chức năng reset password: 
+  ==> reset password: phía client gửi email họ đăng ký => server: email có hợp hay không
+  ==> nếu hợp lệ thì gửi mail + link (password change token)
+  ==> báo cho client check mail => click link
+  ==> client gửi API kèm token
+  ==> check token có giống với token mà server đã gửi mail hay không
+  ==> cho user thay đổi password

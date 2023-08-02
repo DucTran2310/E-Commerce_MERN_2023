@@ -3,6 +3,8 @@ const asyncHandler = require('express-async-handler')
 const { checkNullFieldRegister, isValidEmail, checkNullFieldLogin } = require('../utils/validate')
 const { generateAccessToken, generateRefreshToken } = require('../middlewares/jwt')
 const jwt = require('jsonwebtoken')
+const sendMail = require('../utils/sendMail')
+const crypto = require('crypto')
 
 const register = asyncHandler(async (req, res) => {
   const { email, password, firstName, lastName, mobile } = req.body
@@ -116,10 +118,10 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 const logout = asyncHandler(async (req, res) => {
   const cookie = req.cookies
-  if(!cookie || !cookie.refreshToken) throw new Error('No refresh token in cookies')
+  if (!cookie || !cookie.refreshToken) throw new Error('No refresh token in cookies')
 
   // Xóa refreshToken ở db
-  await User.findOneAndUpdate({refreshToken: cookie.refreshToken}, {refreshToken: ''}, {new: true})
+  await User.findOneAndUpdate({ refreshToken: cookie.refreshToken }, { refreshToken: '' }, { new: true })
 
   // Xóa refreshToken ở trình duyệt
   res.clearCookie('refreshToken', {
@@ -135,10 +137,58 @@ const logout = asyncHandler(async (req, res) => {
   })
 })
 
+const forgotPassword = asyncHandler(async (req, res) => {
+  const email = req.query
+  if (!email) throw new Error('Missing email')
+  const user = await User.findOne(email)
+  if (!user) throw new Error('Email not found')
+  const resetToken = user.createPasswordChangedToken()
+  await user.save()
+
+  const html = `Xin vui lòng click vào link dưới đây để thay đổi mật khẩu của bạn.
+                Link này sẽ hết hạn sau 15 phút kể từ bây giờ. 
+                <a href=${process.env.URL_SERVER}/api/user/reset-password/${resetToken}>
+                Nhấn vào đây
+                </a>`
+
+  const data = {
+    email,
+    html
+  }
+  const result = await sendMail(data)
+
+  return res.status(200).json({
+    success: true,
+    result
+  })
+
+})
+
+const resetPassword = asyncHandler(async (req, res) => {
+  const { password, token } = req.body
+  if (!password || !token) throw new Error('Missing imputs')
+  const passwordResetToken = crypto.createHash('sha256').update(token).digest('hex')
+  const user = await User.findOne({ passwordResetToken, passwordResetExpire: { $gt: Date.now() } })
+  if (!user) throw new Error('Invalid reset token')
+  user.password = password
+  user.passwordResetToken = undefined
+  user.passwordChangedAt = Date.now()
+  user.passwordResetExpires = undefined
+  await user.save()
+  return res.status(200).json({
+    error: user ? true : false,
+    errorReason: user ? 'Updated password' : 'Something went wrong',
+    success: user ? true : false,
+    message: user ? 'Updated password' : 'Something went wrong'
+  })
+})
+
 module.exports = {
   register,
   login,
   getCurrent,
   refreshAccessToken,
-  logout
+  logout,
+  forgotPassword,
+  resetPassword
 }
