@@ -107,8 +107,31 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   // Check xem token có khớp với token đã lưu trong db
   const response = await User.findOne({ _id: result._id, refreshToken: cookie.refreshToken })
   return res.status(200).json({
+    error: response ? true : false,
+    errorReason: null,
     success: response ? true : false,
     newAccessToken: response ? generateAccessToken(response._id, response.role) : 'Refresh token not matched'
+  })
+})
+
+const logout = asyncHandler(async (req, res) => {
+  const cookie = req.cookies
+  if(!cookie || !cookie.refreshToken) throw new Error('No refresh token in cookies')
+
+  // Xóa refreshToken ở db
+  await User.findOneAndUpdate({refreshToken: cookie.refreshToken}, {refreshToken: ''}, {new: true})
+
+  // Xóa refreshToken ở trình duyệt
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: true
+  })
+
+  return res.status(200).json({
+    error: false,
+    errorReason: null,
+    success: true,
+    message: 'Logout is successfully'
   })
 })
 
@@ -116,5 +139,6 @@ module.exports = {
   register,
   login,
   getCurrent,
-  refreshAccessToken
+  refreshAccessToken,
+  logout
 }
