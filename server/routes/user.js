@@ -1,14 +1,14 @@
 const router = require('express').Router()
-const ctrls = require('../controllers/user')
+const userController = require('../controllers/user')
 const { verifyAccessToken } = require('../middlewares/verifyToken')
 
-router.post('/register', ctrls.register)
-router.post('/login', ctrls.login)
-router.get('/current', verifyAccessToken, ctrls.getCurrent)
-router.post('/refreshToken', ctrls.refreshAccessToken)
-router.get('/logout', ctrls.logout)
-router.get('/forgotpassword', ctrls.forgotPassword)
-router.put('/resetpassword', ctrls.resetPassword)
+router.post('/register', userController.register)
+router.post('/login', userController.login)
+router.get('/current', verifyAccessToken, userController.getCurrent)
+router.post('/refreshToken', userController.refreshAccessToken)
+router.get('/logout', userController.logout)
+router.get('/forgotpassword', userController.forgotPassword)
+router.put('/resetpassword', userController.resetPassword)
 
 module.exports = router
 
