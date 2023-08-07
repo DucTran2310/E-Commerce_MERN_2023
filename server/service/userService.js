@@ -185,7 +185,7 @@ const forgotPasswordUser = asyncHandler(async (req, res) => {
       success: false,
       message: 'Missing email'
     }
-  } 
+  }
 
   const user = await User.findOne(email)
   if (!user) {
@@ -195,7 +195,7 @@ const forgotPasswordUser = asyncHandler(async (req, res) => {
       success: false,
       message: 'Email not found'
     }
-  } 
+  }
   const resetToken = user.createPasswordChangedToken()
   await user.save()
 
@@ -229,11 +229,11 @@ const resetPasswordUser = asyncHandler(async (req, res) => {
       success: false,
       message: 'Missing inputs'
     }
-  } 
+  }
 
   const passwordResetToken = crypto.createHash('sha256').update(token).digest('hex')
   const user = await User.findOne({ passwordResetToken, passwordResetExpire: { $gt: Date.now() } })
-  
+
   // Check user
   if (!user) {
     return {
@@ -259,6 +259,85 @@ const resetPasswordUser = asyncHandler(async (req, res) => {
   }
 })
 
+const getAllUsers = asyncHandler(async (req, res) => {
+  const response = await User.find().select('-password -role -refreshToken -mobile -passwordResetExpire')
+  return {
+    error: response ? false : true,
+    errorReason: null,
+    success: response ? true : false,
+    user: response
+  }
+})
+
+const deleteUser = asyncHandler(async (req, res) => {
+  const { _id } = req.query
+  if (!_id) {
+    return {
+      error: true,
+      errorReason: 'Id user is not null',
+      success: false,
+      object: 'Bạn chưa truyền id user cần xóa'
+    }
+  }
+
+  try {
+    const response = await User.findByIdAndDelete(_id)
+
+    return {
+      error: response ? false : true,
+      errorReason: response ? null : 'Something went wrong',
+      success: response ? true : false,
+      toastMessage: response ? `User with email ${response.email} deleted` : 'Something went wrong'
+    }
+  } catch (error) {
+    return {
+      error: true,
+      errorReason: error.message,
+      success: false,
+      toastMessage: 'User not found'
+    }
+  }
+
+})
+
+const updateUser = asyncHandler(async (req, res) => {
+  const { _id } = req.user
+  if (!_id || Object.keys(req.body).length === 0) {
+    return {
+      error: true,
+      errorReason: 'Id user is not null',
+      success: false,
+      object: !_id ? 'Bạn chưa truyền id user cần cập nhật' : 'Bạn chưa nhập thông tin cần cập nhật'
+    }
+  }
+  const response = await User.findByIdAndUpdate(_id, req.body, {new: true}).select('-password -role -refreshToken')
+  return {
+    error: response ? false : true,
+    errorReason: null,
+    success: response ? true : false,
+    toastMessage: response ? response : 'Something went wrong'
+  }
+})
+
+const updateUserByAdmin = asyncHandler(async (req, res) => {
+  const { uid } = req.params
+  if (Object.keys(req.body).length === 0) {
+    return {
+      error: true,
+      errorReason: 'Id user is not null',
+      success: false,
+      object: 'Bạn chưa nhập thông tin cần cập nhật'
+    }
+  }
+  const response = await User.findByIdAndUpdate(uid, req.body, {new: true}).select('-password -role -refreshToken')
+  return {
+    error: response ? false : true,
+    errorReason: null,
+    success: response ? true : false,
+    toastMessage: response ? response : 'Something went wrong'
+  }
+})
+
 module.exports = {
   registerUser,
   loginUser,
@@ -266,5 +345,9 @@ module.exports = {
   refreshAccessTokenUser,
   logoutUser,
   forgotPasswordUser,
-  resetPasswordUser
+  resetPasswordUser,
+  getAllUsers,
+  deleteUser,
+  updateUser,
+  updateUserByAdmin
 }
