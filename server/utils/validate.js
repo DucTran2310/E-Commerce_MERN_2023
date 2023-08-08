@@ -22,6 +22,26 @@ function checkNullFieldRegister(email, password, firstName, lastName, mobile) {
   }
 }
 
+function checkNullFieldCreateProduct(title, description, brand, price) {
+  let errorReason = null
+  if (!title) {
+    errorReason = 'Title is not null'
+    return errorReason
+  }
+  if (!description) {
+    errorReason = 'Description is not null'
+    return errorReason
+  }
+  if (!brand) {
+    errorReason = 'Brand is not null'
+    return errorReason
+  }
+  if (!price) {
+    errorReason = 'Price is not null'
+    return errorReason
+  }
+}
+
 function checkNullFieldLogin(email, password) {
   let errorReason = null
   if (!email) {
@@ -44,5 +64,6 @@ function isValidEmail(email) {
 module.exports = {
   checkNullFieldRegister,
   isValidEmail,
-  checkNullFieldLogin
+  checkNullFieldLogin,
+  checkNullFieldCreateProduct
 };
