@@ -7,6 +7,34 @@ const createProduct = async function (req, res) {
   sendResponse(res, response)
 }
 
+const getProductDetail = async function (req, res) {
+  const response = await productService.getProductService(req, res)
+
+  sendResponse(res, response)
+}
+
+const getAllProductsDetail = async function (req, res) {
+  const response = await productService.getAllProductsService(req, res)
+
+  sendResponse(res, response)
+}
+
+const updateProduct = async function (req, res) {
+  const response = await productService.updateProductService(req, res)
+
+  sendResponse(res, response)
+}
+
+const deleteProduct = async function (req, res) {
+  const response = await productService.deleteProductService(req, res)
+
+  sendResponse(res, response)
+}
+
 module.exports = {
-  createProduct
+  createProduct,
+  getProductDetail,
+  getAllProductsDetail,
+  updateProduct,
+  deleteProduct
 }
