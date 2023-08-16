@@ -31,10 +31,17 @@ const deleteProduct = async function (req, res) {
   sendResponse(res, response)
 }
 
+const ratings = async function (req, res) {
+  const response = await productService.ratingsService(req, res)
+
+  sendResponse(res, response)
+}
+
 module.exports = {
   createProduct,
   getProduct,
   getAllProductsDetail,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  ratings
 }
