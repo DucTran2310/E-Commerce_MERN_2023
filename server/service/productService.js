@@ -56,13 +56,41 @@ const getProductService = asyncHandler(async (req, res) => {
 
 const getAllProductsService = asyncHandler(async (req, res) => {
 
-  const product = await Product.find()
+  const queries = { ...req.query }
+  // Split field special
+  const excludeFields = ['limit', 'sort', 'page', 'fields']
+  excludeFields.forEach(el => delete queries[el])
 
-  return {
-    error: product ? false : true,
-    errorReason: product ? 'Get all products successfully' : 'Get all products failed',
-    success: product ? true : false,
-    object: product ? product : 'Cannot get all detail products'
+  // Format theo mongoose
+  let queryString = JSON.stringify(queries)
+  queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, matchEl => `$${matchEl}`)
+  const formatedQueries = JSON.parse(queryString)
+
+  // Filtering
+  if (queries?.title) formatedQueries.title = { $regex: queries.title, $options: 'i' }
+  let queryCommand = Product.find(formatedQueries)
+
+  // Sorting
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(',').join(' ')
+    queryCommand = queryCommand.sort(sortBy)
+  } else {
+    queryCommand = queryCommand.sort('-createdAt')
+  }
+
+  // excute query
+  try {
+    const response = await queryCommand.exec()
+    const counts = await Product.find(formatedQueries).countDocuments()
+    return {
+      error: response ? false : true,
+      errorReason: response ? response.length === 0 ? 'Can not find product' : 'Get detail product successfully' : 'Get detail product failed',
+      success: response ? true : false,
+      object: response ? response.length === 0 ? 'Can not find product' : response :'Cannot get detail product',
+      counts
+    }
+  } catch (err) {
+    throw Error(err.message)
   }
 })
 
