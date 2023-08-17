@@ -280,6 +280,19 @@ const deleteUser = asyncHandler(async (req, res) => {
     }
   }
 
+  // Get the schema keys of the User model
+  const schemaKeys = Object.keys(User.schema.paths)
+
+  // Check if bid exists in the schema keys
+  if (!schemaKeys.includes('_id')) {
+    return {
+      error: true,
+      errorReason: `Invalid userID: ${_id}`,
+      success: false,
+      object: `ID người dùng không hợp lệ: ${_id}`
+    }
+  }
+
   try {
     const response = await User.findByIdAndDelete(_id)
 
@@ -310,6 +323,22 @@ const updateUser = asyncHandler(async (req, res) => {
       object: !_id ? 'Bạn chưa truyền id user cần cập nhật' : 'Bạn chưa nhập thông tin cần cập nhật'
     }
   }
+
+  // Get the schema keys of the Blog model
+  const schemaKeys = Object.keys(User.schema.paths)
+
+  // Check if the keys in req.body are in the schema keys
+  for (let key in req.body) {
+    if (!schemaKeys.includes(key)) {
+      return {
+        error: true,
+        errorReason: `Key "${key}" does not exist for updating`,
+        success: false,
+        object: `Key "${key}" không tồn tại để cập nhật`
+      }
+    }
+  }
+
   const response = await User.findByIdAndUpdate(_id, req.body, {new: true}).select('-password -role -refreshToken')
   return {
     error: response ? false : true,

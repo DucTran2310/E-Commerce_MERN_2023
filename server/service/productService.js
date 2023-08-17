@@ -126,6 +126,21 @@ const updateProductService = asyncHandler(async (req, res) => {
   }
   if (req.body && req.body.title) req.body.slug = slugify(req.body.title)
 
+  // Get the schema keys of the Blog model
+  const schemaKeys = Object.keys(Product.schema.paths)
+
+  // Check if the keys in req.body are in the schema keys
+  for (let key in req.body) {
+    if (!schemaKeys.includes(key)) {
+      return {
+        error: true,
+        errorReason: `Key "${key}" does not exist for updating`,
+        success: false,
+        object: `Key "${key}" không tồn tại để cập nhật`
+      }
+    }
+  }
+
   const updatedProduct = await Product.findByIdAndUpdate(productID, req.body, { new: true })
 
   return {
@@ -138,6 +153,20 @@ const updateProductService = asyncHandler(async (req, res) => {
 
 const deleteProductService = asyncHandler(async (req, res) => {
   const { productID } = req.params
+
+  // Get the schema keys of the Product model
+  const schemaKeys = Object.keys(Product.schema.paths)
+
+  // Check if bid exists in the schema keys
+  if (!schemaKeys.includes('productID')) {
+    return {
+      error: true,
+      errorReason: `Invalid productID: ${productID}`,
+      success: false,
+      object: `ID sản phẩm không hợp lệ: ${productID}`
+    }
+  }
+
   const deletedProduct = await Product.findByIdAndDelete(productID)
   return {
     error: true,
