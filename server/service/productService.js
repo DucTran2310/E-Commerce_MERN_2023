@@ -166,17 +166,27 @@ const ratingsService = asyncHandler(async (req, res) => {
       $set: {"ratings.$.star": star, "ratings.$.comment": comment}
     }, {new: true})
   } else {
-    // add start and comment
+    // add star and comment
     const response = await Product.findByIdAndUpdate(pid, {
       $push: { ratings: { star, comment, postedBy: _id } }
     }, { new: true })
   }
 
+  // Average ratings
+  const updatedProduct = await Product.findById(pid)
+  const ratingCount = updatedProduct.ratings.length
+  const sumRatings = updatedProduct.ratings.reduce((sum, ele) => sum + +ele.star, 0)
+
+  updatedProduct.totalRatings = Math.round(sumRatings * 10/ratingCount) / 10
+
+  await updatedProduct.save()
+
   return {
     error: false,
     errorReason: 'Add ratings successfully',
     success: true,
-    object: null
+    object: null,
+    updatedProduct
   }
 })
 
