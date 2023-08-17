@@ -60,6 +60,21 @@ const updateBlogCategoryService = asyncHandler(async (req, res) => {
 
   const { bcid } = req.params
 
+  // Get the schema keys of the Blog model
+  const schemaKeys = Object.keys(BlogCategory.schema.paths)
+
+  // Check if the keys in req.body are in the schema keys
+  for (let key in req.body) {
+    if (!schemaKeys.includes(key)) {
+      return {
+        error: true,
+        errorReason: `Key "${key}" does not exist for updating`,
+        success: false,
+        object: `Key "${key}" không tồn tại để cập nhật`
+      }
+    }
+  }
+
   const response = await BlogCategory.findByIdAndUpdate(bcid, req.body, { new: true })
 
   return {
@@ -74,11 +89,24 @@ const deleteBlogCategoryService = asyncHandler(async (req, res) => {
 
   const { bcid } = req.params
 
+  // Get the schema keys of the Blog Category model
+  const schemaKeys = Object.keys(BlogCategory.schema.paths)
+
+  // Check if bid exists in the schema keys
+  if (!schemaKeys.includes('bcid')) {
+    return {
+      error: true,
+      errorReason: `Invalid blog category ID: ${bcid}`,
+      success: false,
+      object: `ID nhóm bài viết không hợp lệ: ${bcid}`
+    }
+  }
+
   const response = await BlogCategory.findByIdAndDelete(bcid)
 
   return {
     error: response ? false : true,
-    errorReason: response ? 'Delete blog categoriy successfully' : 'Delete blog categoriy failed',
+    errorReason: response ? 'Delete blog category successfully' : 'Delete blog category failed',
     success: response ? true : false,
     object: response ? response : 'Delete blog category failed'
   }

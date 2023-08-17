@@ -61,9 +61,26 @@ function isValidEmail(email) {
   return emailRegex.test(email)
 }
 
+function checkNullFieldCreateBlog(title, description, category) {
+  let errorReason = null
+  if (!title) {
+    errorReason = 'Title is not null'
+    return errorReason
+  }
+  if (!description) {
+    errorReason = 'Description is not null'
+    return errorReason
+  }
+  if (!category) {
+    errorReason = 'Category is not null'
+    return errorReason
+  }
+}
+
 module.exports = {
   checkNullFieldRegister,
   isValidEmail,
   checkNullFieldLogin,
-  checkNullFieldCreateProduct
+  checkNullFieldCreateProduct,
+  checkNullFieldCreateBlog
 };
