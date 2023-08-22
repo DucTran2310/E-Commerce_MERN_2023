@@ -3,7 +3,8 @@ const asyncHandler = require('express-async-handler')
 const {
   checkNullFieldRegister,
   isValidEmail,
-  checkNullFieldLogin
+  checkNullFieldLogin,
+  checkNullFieldUpdateCart
 } = require('../utils/validate')
 const {
   generateAccessToken,
@@ -113,7 +114,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
   const { _id } = req.user
   const user = await User.findById(_id).select('-password -role -refreshToken')
   return {
-    error: user ? true : false,
+    error: user ? false : true,
     errorReason: null,
     success: user ? true : false,
     toastMessage: user ? 'Lấy thông tin người dùng thành công' : 'Lấy thông tin người dùng thất bại',
@@ -267,7 +268,8 @@ const getAllUsers = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: null,
     success: response ? true : false,
-    object: response
+    toastMessage: response ? 'Get all users success' : 'Get all users failed',
+    object: response ? response : null
   }
 })
 
@@ -278,7 +280,7 @@ const deleteUser = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'Id user is not null',
       success: false,
-      object: 'Bạn chưa truyền id user cần xóa'
+      toastMessage: 'Bạn chưa truyền id user cần xóa'
     }
   }
 
@@ -341,12 +343,13 @@ const updateUser = asyncHandler(async (req, res) => {
     }
   }
 
-  const response = await User.findByIdAndUpdate(_id, req.body, {new: true}).select('-password -role -refreshToken')
+  const response = await User.findByIdAndUpdate(_id, req.body, { new: true }).select('-password -role -refreshToken')
   return {
     error: response ? false : true,
-    errorReason: null,
+    errorReason: response ? 'Update user success' : 'Something went wrong',
     success: response ? true : false,
-    toastMessage: response ? response : 'Something went wrong'
+    toastMessage: response ? 'Update user success' : 'Something went wrong',
+    object: response ? response : null
   }
 })
 
@@ -360,13 +363,113 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
       toastMessage: 'Bạn chưa nhập thông tin cần cập nhật'
     }
   }
-  const response = await User.findByIdAndUpdate(uid, req.body, {new: true}).select('-password -role -refreshToken')
+  const response = await User.findByIdAndUpdate(uid, req.body, { new: true }).select('-password -role -refreshToken')
   return {
     error: response ? false : true,
-    errorReason: null,
+    errorReason: response ? 'Update user success' : 'Something went wrong',
     success: response ? true : false,
-    toastMessage: response ? response : 'Something went wrong'
+    toastMessage: response ? 'Update user success' : 'Something went wrong',
+    object: response ? response : null
   }
+})
+
+const updateUserAddress = asyncHandler(async (req, res) => {
+  const { _id } = req.user
+  if (!req.body.address) {
+    return {
+      error: true,
+      errorReason: 'Id user is not null',
+      success: false,
+      toastMessage: 'Bạn chưa nhập thông tin cần cập nhật'
+    }
+  }
+
+  const user = await User.findById(_id)
+  if (!user) {
+    return {
+      error: true,
+      errorReason: 'User not found',
+      success: false,
+      toastMessage: 'Không tìm thấy người dùng',
+      object: null
+    }
+  }
+
+  const existingAddress = user.address.find((address) => address === req.body.address)
+  if (existingAddress) {
+    return {
+      error: true,
+      errorReason: 'Duplicate address',
+      success: false,
+      toastMessage: 'Địa chỉ đã tồn tại',
+      object: null
+    }
+  }
+
+  user.address.push(req.body.address)
+  const response = await user.save()
+
+  return {
+    error: response ? false : true,
+    errorReason: response ? 'Cập nhật địa chỉ người dùng thành công' : 'Cập nhật địa chỉ người dùng thất bại',
+    success: response ? true : false,
+    toastMessage: response ? 'Cập nhật địa chỉ người dùng thành công' : 'Cập nhật địa chỉ người dùng thất bại',
+    object: response ? response : null
+  }
+})
+
+const updateCartService = asyncHandler(async (req, res) => {
+  const { _id } = req.user
+  const { pid, quantity, color } = req.body
+
+  if (!pid || !quantity || !color) {
+    return {
+      error: true,
+      errorReason: checkNullFieldUpdateCart(pid, quantity, color),
+      success: false,
+      toastMessage: 'Thông tin không được để trống.'
+    }
+  }
+
+  const user = await User.findById(_id).select('cart')
+
+  const alreadyProduct = user?.cart?.find(el => el.product.toString() === pid)
+
+  if (alreadyProduct) {
+    if (alreadyProduct.color === color) {
+      const response = await User.updateOne({ cart: { $elemMatch: alreadyProduct } }, { $set: { "cart.$.quantity": quantity } }, {
+        new: true
+      })
+
+      return {
+        error: response ? false : true,
+        errorReason: response ? 'Thêm sản phẩm vào giỏ hành thành công' : 'Thêm sản phẩm vào giỏ hành thất bại',
+        success: response ? true : false,
+        toastMessage: response ? 'Thêm sản phẩm vào giỏ hành thành công' : 'Thêm sản phẩm vào giỏ hành thất bại',
+        object: response ? response : null
+      }
+
+    } else {
+      const response = await User.findByIdAndUpdate(_id, { $push: { cart: { product: pid, quantity, color } } }, { new: true })
+      return {
+        error: response ? false : true,
+        errorReason: response ? 'Thêm sản phẩm vào giỏ hành thành công' : 'Thêm sản phẩm vào giỏ hành thất bại',
+        success: response ? true : false,
+        toastMessage: response ? 'Thêm sản phẩm vào giỏ hành thành công' : 'Thêm sản phẩm vào giỏ hành thất bại',
+        object: response ? response : null
+      }
+    }
+  } else {
+    const response = await User.findByIdAndUpdate(_id, { $push: { cart: { product: pid, quantity, color } } }, { new: true })
+    return {
+      error: response ? false : true,
+      errorReason: response ? 'Thêm sản phẩm vào giỏ hành thành công' : 'Thêm sản phẩm vào giỏ hành thất bại',
+      success: response ? true : false,
+      toastMessage: response ? 'Thêm sản phẩm vào giỏ hành thành công' : 'Thêm sản phẩm vào giỏ hành thất bại',
+      object: response ? response : null
+    }
+  }
+
 })
 
 module.exports = {
@@ -380,5 +483,7 @@ module.exports = {
   getAllUsers,
   deleteUser,
   updateUser,
-  updateUserByAdmin
+  updateUserByAdmin,
+  updateUserAddress,
+  updateCartService
 }

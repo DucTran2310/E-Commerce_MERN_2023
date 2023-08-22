@@ -93,11 +93,28 @@ function checkNullFieldCreateCoupon(name, discount, expiry) {
   }
 }
 
+function checkNullFieldUpdateCart(pid, quantity, color) {
+  let errorReason = null
+  if (!pid) {
+    errorReason = 'Product ID is not null'
+    return errorReason
+  }
+  if (!quantity) {
+    errorReason = 'Quantity is not null'
+    return errorReason
+  }
+  if (!color) {
+    errorReason = 'Color is not null'
+    return errorReason
+  }
+}
+
 module.exports = {
   checkNullFieldRegister,
   isValidEmail,
   checkNullFieldLogin,
   checkNullFieldCreateProduct,
   checkNullFieldCreateBlog,
-  checkNullFieldCreateCoupon
+  checkNullFieldCreateCoupon,
+  checkNullFieldUpdateCart
 };

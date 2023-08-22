@@ -67,6 +67,18 @@ const updateUserByAdminController = async function (req, res) {
   sendResponse(res, response)
 }
 
+const updateUserAddressController = async function (req, res) {
+  const response = await userService.updateUserAddress(req, res)
+
+  sendResponse(res, response)
+}
+
+const updateUserCartController = async function (req, res) {
+  const response = await userService.updateCartService(req, res)
+
+  sendResponse(res, response)
+}
+
 module.exports = {
   register,
   login,
@@ -78,5 +90,7 @@ module.exports = {
   getAll,
   deleteUserById,
   updateUserById,
-  updateUserByAdminController
+  updateUserByAdminController,
+  updateUserAddressController,
+  updateUserCartController
 }

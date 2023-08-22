@@ -255,6 +255,32 @@ const getDetailBlogService = asyncHandler(async (req, res) => {
 
 })
 
+const uploadImageBlogService = asyncHandler(async (req, res) => {
+  const { bid } = req.params
+  if (!req.file) {
+    return {
+      error: true,
+      errorReason: 'Missing input',
+      success: false,
+      toastMessage: 'Bạn chưa nhập thông tin cần cập nhật'
+    }
+  }
+
+  const response = await Blog.findByIdAndUpdate(
+    bid,
+    { images: req.file.path },
+    { new: true }
+  )
+
+  return {
+    error: response ? false : true,
+    errorReason: response ? 'Upload images success' : 'Upload images failed',
+    success: response ? true : false,
+    toastMessage: response ? 'Upload images success' : 'Upload images failed',
+    object: response ? response : null
+  }
+})
+
 module.exports = {
   createBlogService,
   getBlogsService,
@@ -262,5 +288,6 @@ module.exports = {
   deleteBlogService,
   likeBlogService,
   disLikeBlogService,
-  getDetailBlogService
+  getDetailBlogService,
+  uploadImageBlogService
 }
