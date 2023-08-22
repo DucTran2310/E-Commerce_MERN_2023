@@ -7,7 +7,7 @@ router.post('/', [verifyAccessToken, isAdmin], productController.createProduct)
 router.get('/', [verifyAccessToken, isAdmin], productController.getAllProductsDetail)
 router.put('/ratings', [verifyAccessToken], productController.ratings)
 router.get('/:productID', productController.getProduct)
-router.put('/uploadImage/:productID', [verifyAccessToken, isAdmin], uploader.single('images'), productController.uploadImageProduct)
+router.put('/uploadImage/:productID', [verifyAccessToken, isAdmin], uploader.array('images', 10), productController.uploadImageProduct)
 router.put('/:productID', [verifyAccessToken, isAdmin], productController.updateProduct)
 router.delete('/:productID', [verifyAccessToken, isAdmin], productController.deleteProduct)
 

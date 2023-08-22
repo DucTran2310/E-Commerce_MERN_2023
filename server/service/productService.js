@@ -226,12 +226,30 @@ const ratingsService = asyncHandler(async (req, res) => {
 })
 
 const uploadImageProductService = asyncHandler(async (req, res) => {
-  console.log('REQUEST FILE: ', req.file)
+  const { productID } = req.params
+  if (!req.files) {
+    return {
+      error: true,
+      errorReason: 'Missing input',
+      success: false,
+      toastMessage: 'Bạn chưa nhập thông tin cần cập nhật'
+    }
+  }
+
+  const imagePaths = req.files.map(el => el.path) // Tạo mảng đường dẫn ảnh
+
+  const response = await Product.findByIdAndUpdate(
+    productID,
+    { $push: { images: { $each: imagePaths } } }, // Cập nhật trường images
+    { new: true }
+  )
+
   return {
-    error: false,
-    errorReason: 'Upload success',
-    success: true,
-    toastMessage: 'Upload success'
+    error: response ? false : true,
+    errorReason: response ? 'Upload images success' : 'Upload images failed',
+    success: response ? true : false,
+    toastMessage: response ? 'Upload images success' : 'Upload images failed',
+    object: response ? response : null
   }
 })
 

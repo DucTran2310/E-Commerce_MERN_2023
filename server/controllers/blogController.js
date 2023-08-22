@@ -43,6 +43,12 @@ const getDetailBlog = async function (req, res) {
   sendResponse(res, response)
 }
 
+const uploadImageBlog = async function (req, res) {
+  const response = await blog.uploadImageBlogService(req, res)
+
+  sendResponse(res, response)
+}
+
 module.exports = {
   createNewBlog,
   getBlogs,
@@ -50,5 +56,6 @@ module.exports = {
   deleteBlog,
   likeBlog,
   disLikeBlog,
-  getDetailBlog
+  getDetailBlog,
+  uploadImageBlog
 }
