@@ -5,3 +5,8 @@
   ==> client gửi API kèm token
   ==> check token có giống với token mà server đã gửi mail hay không
   ==> cho user thay đổi password
+
+Install các thư viện npm cần thiết:
+- cloudinary - thư viện quản lý hình ảnh hoàn chỉnh
+- multer - node.js middleware để xử lý multipart/form-data, được dùng để upload file
+- multer-storage-cloudinary - multer storage enegine cho Cloudinary

@@ -11,7 +11,7 @@ const createProductService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'You do not enter info product',
       success: false,
-      object: 'Bạn chưa nhập thông tin cho sản phẩm cần tạo'
+      toastMessage: 'Bạn chưa nhập thông tin cho sản phẩm cần tạo'
     }
   }
 
@@ -36,7 +36,8 @@ const createProductService = asyncHandler(async (req, res) => {
     error: newProduct ? false : true,
     errorReason: newProduct ? 'Created product successfully' : 'Create product failed',
     success: newProduct ? true : false,
-    object: newProduct ? newProduct : 'Create product faild'
+    toastMessage: newProduct ? 'Tạo sản phẩm thành công' : 'Tạo sản phẩm thất bại',
+    object: newProduct ? newProduct : null
   }
 })
 
@@ -50,7 +51,8 @@ const getProductService = asyncHandler(async (req, res) => {
     error: product ? false : true,
     errorReason: product ? 'Get detail product successfully' : 'Get detail product failed',
     success: product ? true : false,
-    object: product ? product : 'Cannot get detail product'
+    toastMessage: newProduct ? 'Lấy chi tiết sản phẩm thành công' : 'Lấy chi tiết sản phẩm thất bại',
+    object: product ? product : null
   }
 })
 
@@ -103,7 +105,8 @@ const getAllProductsService = asyncHandler(async (req, res) => {
       error: response ? false : true,
       errorReason: response ? response.length === 0 ? 'Can not find product' : 'Get detail product successfully' : 'Get detail product failed',
       success: response ? true : false,
-      object: response ? response.length === 0 ? [] : response : 'Cannot get detail product',
+      toastMessage: response ? response.length === 0 ? 'Lấy danh sách sản phẩm thất bại' : 'Lấy danh sách sản phẩm thành công' : 'Lấy danh sách sản phẩm thất bại',
+      object: response ? response.length === 0 ? [] : response : [],
       counts,
       page,
       limit
@@ -121,7 +124,7 @@ const updateProductService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'Missing input',
       success: false,
-      object: 'Bạn chưa nhập thông tin cần cập nhật'
+      toastMessage: 'Bạn chưa nhập thông tin cần cập nhật'
     }
   }
   if (req.body && req.body.title) req.body.slug = slugify(req.body.title)
@@ -136,7 +139,7 @@ const updateProductService = asyncHandler(async (req, res) => {
         error: true,
         errorReason: `Key "${key}" does not exist for updating`,
         success: false,
-        object: `Key "${key}" không tồn tại để cập nhật`
+        toastMessage: `Key "${key}" không tồn tại để cập nhật`
       }
     }
   }
@@ -147,7 +150,8 @@ const updateProductService = asyncHandler(async (req, res) => {
     error: updatedProduct ? false : true,
     errorReason: updatedProduct ? 'Update product successfully' : 'Update products failed',
     success: updatedProduct ? true : false,
-    object: updatedProduct ? updatedProduct : 'Cannot update product'
+    toastMessage: updatedProduct ? 'Cập nhật sản phẩm thành công' : 'Cập nhật sản phẩm thất bại',
+    object: updatedProduct ? updatedProduct : null
   }
 })
 
@@ -163,16 +167,17 @@ const deleteProductService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: `Invalid productID: ${productID}`,
       success: false,
-      object: `ID sản phẩm không hợp lệ: ${productID}`
+      toastMessage: `ID sản phẩm không hợp lệ: ${productID}`
     }
   }
 
   const deletedProduct = await Product.findByIdAndDelete(productID)
   return {
-    error: true,
+    error: deletedProduct ? false : true,
     errorReason: 'Cannot delete product',
     success: deletedProduct ? true : false,
-    deletedProduct: deletedProduct ? deletedProduct : 'Cannot delete product'
+    toastMessage: deletedProduct ? 'Xóa sản phẩm thành công' : 'Xóa sản phẩm thất bại',
+    deletedProduct: deletedProduct ? deletedProduct : null
   }
 })
 
@@ -190,10 +195,10 @@ const ratingsService = asyncHandler(async (req, res) => {
   if (alreadyRating) {
     // update star & comment
     await Product.updateOne({
-      ratings: { $elemMatch: { postedBy: _id } } 
+      ratings: { $elemMatch: { postedBy: _id } }
     }, {
-      $set: {"ratings.$.star": star, "ratings.$.comment": comment}
-    }, {new: true})
+      $set: { "ratings.$.star": star, "ratings.$.comment": comment }
+    }, { new: true })
   } else {
     // add star and comment
     const response = await Product.findByIdAndUpdate(pid, {
@@ -206,7 +211,7 @@ const ratingsService = asyncHandler(async (req, res) => {
   const ratingCount = updatedProduct.ratings.length
   const sumRatings = updatedProduct.ratings.reduce((sum, ele) => sum + +ele.star, 0)
 
-  updatedProduct.totalRatings = Math.round(sumRatings * 10/ratingCount) / 10
+  updatedProduct.totalRatings = Math.round(sumRatings * 10 / ratingCount) / 10
 
   await updatedProduct.save()
 
@@ -214,8 +219,19 @@ const ratingsService = asyncHandler(async (req, res) => {
     error: false,
     errorReason: 'Add ratings successfully',
     success: true,
+    toastMessage: 'Add ratings successfully',
     object: null,
     updatedProduct
+  }
+})
+
+const uploadImageProductService = asyncHandler(async (req, res) => {
+  console.log('REQUEST FILE: ', req.file)
+  return {
+    error: false,
+    errorReason: 'Upload success',
+    success: true,
+    toastMessage: 'Upload success'
   }
 })
 
@@ -225,5 +241,6 @@ module.exports = {
   getAllProductsService,
   updateProductService,
   deleteProductService,
-  ratingsService
+  ratingsService,
+  uploadImageProductService
 }

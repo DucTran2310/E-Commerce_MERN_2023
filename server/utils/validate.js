@@ -77,10 +77,27 @@ function checkNullFieldCreateBlog(title, description, category) {
   }
 }
 
+function checkNullFieldCreateCoupon(name, discount, expiry) {
+  let errorReason = null
+  if (!name) {
+    errorReason = 'Name is not null'
+    return errorReason
+  }
+  if (!discount) {
+    errorReason = 'Discount is not null'
+    return errorReason
+  }
+  if (!expiry) {
+    errorReason = 'Expiry is not null'
+    return errorReason
+  }
+}
+
 module.exports = {
   checkNullFieldRegister,
   isValidEmail,
   checkNullFieldLogin,
   checkNullFieldCreateProduct,
-  checkNullFieldCreateBlog
+  checkNullFieldCreateBlog,
+  checkNullFieldCreateCoupon
 };

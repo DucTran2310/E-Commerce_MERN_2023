@@ -8,7 +8,7 @@ const createProductCategoryService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'You do not enter info product category',
       success: false,
-      object: 'Bạn chưa nhập thông tin cho nhóm sản phẩm cần tạo'
+      toastMessage: 'Bạn chưa nhập thông tin cho nhóm sản phẩm cần tạo'
     }
   }
 
@@ -30,7 +30,7 @@ const createProductCategoryService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'Product category already exists',
       success: false,
-      object: 'Product category already exists'
+      toastMessage: 'Loại sản phẩm đã tồn tại'
     }
   }
 
@@ -40,7 +40,8 @@ const createProductCategoryService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Created product category successfully' : 'Create product category failed',
     success: response ? true : false,
-    object: response ? response : 'Create product category faild'
+    toastMessage: response ? 'Tạo loại sản phẩm thành công' : 'Tạo loại sản phẩm thất bại',
+    object: response ? response : null
   }
 })
 
@@ -52,7 +53,8 @@ const getProductCategoriesService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Get product categories successfully' : 'Get product categories failed',
     success: response ? true : false,
-    object: response ? response : 'Get product categories failed'
+    toastMessage: response ? 'Lấy danh sách loại sản phẩm thành công' : 'Lấy danh sách loại sản phẩm thất bại',
+    object: response ? response : []
   }
 })
 
@@ -70,7 +72,7 @@ const updateProductCategoryService = asyncHandler(async (req, res) => {
         error: true,
         errorReason: `Key "${key}" does not exist for updating`,
         success: false,
-        object: `Key "${key}" không tồn tại để cập nhật`
+        toastMessage: `Key "${key}" không tồn tại để cập nhật`
       }
     }
   }
@@ -81,7 +83,8 @@ const updateProductCategoryService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Update product category successfully' : 'Update product category failed',
     success: response ? true : false,
-    object: response ? response : 'Update product category failed'
+    toastMessage: response ? 'Cập nhật loại sản phẩm thành công' : 'Cập nhật loại sản phẩm thất bại',
+    object: response ? response : null
   }
 })
 
@@ -98,7 +101,7 @@ const deleteProductCategoryService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: `Invalid product category ID: ${pcid}`,
       success: false,
-      object: `ID nhóm sản phẩm không hợp lệ: ${pcid}`
+      toastMessage: `ID nhóm sản phẩm không hợp lệ: ${pcid}`
     }
   }
 
@@ -108,7 +111,8 @@ const deleteProductCategoryService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Delete product category successfully' : 'Delete product category failed',
     success: response ? true : false,
-    object: response ? response : 'Delete product category failed'
+    toastMessage: response ? 'Xóa loại sản phẩm thành công' : 'Xóa loại sản phẩm thất bại',
+    object: response ? response : null
   }
 })
 

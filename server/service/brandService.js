@@ -8,7 +8,7 @@ const createBrandService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'You do not enter info brand',
       success: false,
-      object: 'Bạn chưa nhập thông tin cho thương hiệu cần tạo'
+      toastMessage: 'Bạn chưa nhập thông tin cho thương hiệu cần tạo'
     }
   }
 
@@ -30,7 +30,7 @@ const createBrandService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'Brand already exists',
       success: false,
-      object: 'Brand already exists'
+      toastMessage: 'Brand already exists'
     }
   }
 
@@ -40,7 +40,8 @@ const createBrandService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Created brand successfully' : 'Create brand failed',
     success: response ? true : false,
-    object: response ? response : 'Create brand faild'
+    toastMessage: response ? 'Tạo nhãn hiệu thành công' : 'Tạo nhãn hiệu thất bại',
+    object: response ? response : null
   }
 })
 
@@ -52,7 +53,8 @@ const getBrandsService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Get brand successfully' : 'Get brand failed',
     success: response ? true : false,
-    object: response ? response : 'Get brand failed'
+    toastMessage: response ? 'Lấy danh sách nhãn hiệu thành công' : 'Lấy danh sách nhãn hiệu thất bại',
+    object: response ? response : []
   }
 })
 
@@ -70,7 +72,7 @@ const updateBrandService = asyncHandler(async (req, res) => {
         error: true,
         errorReason: `Key "${key}" does not exist for updating`,
         success: false,
-        object: `Key "${key}" không tồn tại để cập nhật`
+        toastMessage: `Key "${key}" không tồn tại để cập nhật`
       }
     }
   }
@@ -81,7 +83,8 @@ const updateBrandService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Update brand successfully' : 'Update brand failed',
     success: response ? true : false,
-    object: response ? response : 'Update brand failed'
+    toastMessage: response ? 'Cập nhật nhãn hiệu thành công' : 'Cập nhật nhãn hiệu thất bại',
+    object: response ? response : null
   }
 })
 
@@ -99,7 +102,7 @@ const deleteBrandService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: `Invalid brand  ID: ${brid}`,
       success: false,
-      object: `ID nhóm sản phẩm không hợp lệ: ${brid}`
+      toastMessage: `ID nhóm sản phẩm không hợp lệ: ${brid}`
     }
   }
 
@@ -109,7 +112,8 @@ const deleteBrandService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Delete brand successfully' : 'Delete brand failed',
     success: response ? true : false,
-    object: response ? response : 'Delete brand  failed'
+    toastMessage: response ? 'Xóa nhãn hiệu thành công' : 'Xóa nhãn hiệu thất bại',
+    object: response ? response : null
   }
 })
 
