@@ -9,7 +9,8 @@ const createBlogService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'You do not enter info blog',
       success: false,
-      object: 'Bạn chưa nhập thông tin cho bài viết cần tạo'
+      toastMessage: 'Bạn chưa nhập thông tin cho bài viết cần tạo',
+      object: null
     }
   }
 
@@ -20,7 +21,7 @@ const createBlogService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: checkNullFieldCreateBlog(title, description, category),
       success: false,
-      toastMessage: 'Thông tin không được để trống.'
+      toastMessage: 'Thông tin không được để trống.',
     }
   }
 
@@ -30,7 +31,8 @@ const createBlogService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Created blog successfully' : 'Create blog failed',
     success: response ? true : false,
-    object: response ? response : 'Create blog faild'
+    toastMessage: response ? 'Tạo bài viết thành công' : 'Tạo bài viết thất bại',
+    object: response ? response : null
   }
 })
 
@@ -43,7 +45,8 @@ const updateBlogService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'You do not enter info to update blog',
       success: false,
-      object: 'Bạn chưa nhập thông tin để cập nhật bài viết'
+      toastMessage: 'Bạn chưa nhập thông tin để cập nhật bài viết',
+      object: null
     }
   }
 
@@ -57,7 +60,8 @@ const updateBlogService = asyncHandler(async (req, res) => {
         error: true,
         errorReason: `Key "${key}" does not exist for updating`,
         success: false,
-        object: `Key "${key}" không tồn tại để cập nhật`
+        toastMessage: `Key "${key}" không tồn tại để cập nhật`,
+        object: null
       }
     }
   }
@@ -68,7 +72,8 @@ const updateBlogService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Updated blog successfully' : 'Updated blog failed',
     success: response ? true : false,
-    object: response ? response : 'Updated blog faild'
+    toastMessage: response ? 'Cập nhật bài viết thành công' : 'Cập nhật bài viết thất bại',
+    object: response ? response : null
   }
 })
 
@@ -80,7 +85,8 @@ const getBlogsService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Get blogs successfully' : 'Get blogs failed',
     success: response ? true : false,
-    object: response ? response : 'Get blogs failed'
+    toastMessage: response ? 'Lấy danh sách bài viết thành công' : 'Lấy danh sách bài viết thất bại',
+    object: response ? response : []
   }
 })
 
@@ -97,7 +103,8 @@ const deleteBlogService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: `Invalid blog ID: ${bid}`,
       success: false,
-      object: `ID bài viết không hợp lệ: ${bid}`
+      toastMessage: `ID bài viết không hợp lệ: ${bid}`,
+      object: null
     }
   }
 
@@ -107,7 +114,8 @@ const deleteBlogService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Delete blog successfully' : 'Delete blog failed',
     success: response ? true : false,
-    object: response ? response : 'Delete blog failed'
+    toastMessage: response ? 'Xóa bài viết thành công' : 'Xóa bài viết thất bại',
+    object: response ? response : null
   }
 })
 
@@ -142,7 +150,8 @@ const likeBlogService = asyncHandler(async (req, res) => {
       error: response ? false : true,
       errorReason: response ? 'Remove dislike blog successfully' : 'Remove dislike blog failed',
       success: response ? true : false,
-      toastMessage: response ? response : 'Remove dislike blog failed',
+      toastMessage: response ? 'Remove dislike blog success' : 'Remove dislike blog failed',
+      object: response ? response : null
     };
   }
 
@@ -153,7 +162,8 @@ const likeBlogService = asyncHandler(async (req, res) => {
       error: response ? false : true,
       errorReason: response ? 'Remove like blog successfully' : 'Remove like blog failed',
       success: response ? true : false,
-      toastMessage: response ? response : 'Remove like blog failed',
+      toastMessage: response ? 'Remove like blog success' : 'Remove like blog failed',
+      object: response ? response : null
     };
   } else {
     const response = await Blog.findByIdAndUpdate(bid, { $push: { likes: _id } }, { new: true })
@@ -161,7 +171,8 @@ const likeBlogService = asyncHandler(async (req, res) => {
       error: response ? false : true,
       errorReason: response ? 'Like blog successfully' : 'Like blog failed',
       success: response ? true : false,
-      toastMessage: response ? response : 'Like blog failed',
+      toastMessage: response ? 'Like blog success' : 'Like blog failed',
+      object: response ? response : null
     };
   }
 })
@@ -189,7 +200,8 @@ const disLikeBlogService = asyncHandler(async (req, res) => {
       error: response ? false : true,
       errorReason: response ? 'Remove like blog successfully' : 'Remove like blog failed',
       success: response ? true : false,
-      toastMessage: response ? response : 'Remove like blog failed',
+      toastMessage: response ? 'Remove like blog success' : 'Remove like blog failed',
+      object: response ? response : null
     };
   }
 
@@ -200,7 +212,8 @@ const disLikeBlogService = asyncHandler(async (req, res) => {
       error: response ? false : true,
       errorReason: response ? 'Remove dislike blog successfully' : 'Remove dislike blog failed',
       success: response ? true : false,
-      toastMessage: response ? response : 'Remove dislike blog failed',
+      toastMessage: response ? 'Remove dislike blog success' : 'Remove dislike blog failed',
+      object: response ? response : null
     };
   } else {
     const response = await Blog.findByIdAndUpdate(bid, { $push: { dislikes: _id } }, { new: true })
@@ -208,7 +221,8 @@ const disLikeBlogService = asyncHandler(async (req, res) => {
       error: response ? false : true,
       errorReason: response ? 'Dislike blog successfully' : 'Dislike blog failed',
       success: response ? true : false,
-      toastMessage: response ? response : 'Dislike blog failed',
+      toastMessage: response ? 'Dislike blog success' : 'Dislike blog failed',
+      object: response ? response : null
     };
   }
 })
@@ -235,7 +249,8 @@ const getDetailBlogService = asyncHandler(async (req, res) => {
     error: blog ? false : true,
     errorReason: blog ? 'Get detail successfully' : 'Do not get detail blog',
     success: blog ? true : false,
-    toastMessage: blog ? blog : 'Không lấy được thông tin chi tiết của bài viết',
+    toastMessage: blog ? 'Lấy thông tin chi tiết bài viết thành công' : 'Không lấy được thông tin chi tiết của bài viết',
+    object: response ? response : null
   };
 
 })

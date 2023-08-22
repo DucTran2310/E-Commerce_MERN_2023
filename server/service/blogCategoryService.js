@@ -30,7 +30,7 @@ const createBlogCategoryService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'Blog category already exists',
       success: false,
-      object: 'Blog category already exists'
+      toastMessage: 'Loại bài đăng đã tồn tại'
     }
   }
 
@@ -40,7 +40,8 @@ const createBlogCategoryService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Created blog category successfully' : 'Create blog category failed',
     success: response ? true : false,
-    object: response ? response : 'Create blog category faild'
+    toastMessage: response ? 'Tạo loại bài đăng thành công' : 'Tạo loại bài đăng thất bại',
+    object: response ? response : null
   }
 })
 
@@ -52,7 +53,8 @@ const getBlogCategoriesService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Get blog categories successfully' : 'Get blog categories failed',
     success: response ? true : false,
-    object: response ? response : 'Get blog categories failed'
+    toastMessage: response ? 'Lấy danh sách loại bài đăng thành công' : 'Lấy danh sách loại bài đăng thất bại',
+    object: response ? response : []
   }
 })
 
@@ -70,7 +72,8 @@ const updateBlogCategoryService = asyncHandler(async (req, res) => {
         error: true,
         errorReason: `Key "${key}" does not exist for updating`,
         success: false,
-        object: `Key "${key}" không tồn tại để cập nhật`
+        toastMessage: `Key "${key}" không tồn tại để cập nhật`,
+        object: null
       }
     }
   }
@@ -81,7 +84,8 @@ const updateBlogCategoryService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Update blog categoriy successfully' : 'Update blog categoriy failed',
     success: response ? true : false,
-    object: response ? response : 'Update blog category failed'
+    toastMessage: response ? 'Cập nhật loại bài đăng thành công' : 'Cập nhật loại bài đăng thất bại',
+    object: response ? response : null
   }
 })
 
@@ -98,7 +102,8 @@ const deleteBlogCategoryService = asyncHandler(async (req, res) => {
       error: true,
       errorReason: `Invalid blog category ID: ${bcid}`,
       success: false,
-      object: `ID nhóm bài viết không hợp lệ: ${bcid}`
+      toastMessage: `ID nhóm bài viết không hợp lệ: ${bcid}`,
+      object: null
     }
   }
 
@@ -108,7 +113,8 @@ const deleteBlogCategoryService = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: response ? 'Delete blog category successfully' : 'Delete blog category failed',
     success: response ? true : false,
-    object: response ? response : 'Delete blog category failed'
+    toastMessage: response ? 'Xóa loại bài đăng thành công' : 'Xóa loại bài đăng thất bại',
+    object: response ? response : null
   }
 })
 

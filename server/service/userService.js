@@ -116,7 +116,8 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     error: user ? true : false,
     errorReason: null,
     success: user ? true : false,
-    object: user ? user : 'User not found'
+    toastMessage: user ? 'Lấy thông tin người dùng thành công' : 'Lấy thông tin người dùng thất bại',
+    object: user ? user : null
   }
 })
 
@@ -143,7 +144,8 @@ const refreshAccessTokenUser = asyncHandler(async (req, res) => {
     error: response ? true : false,
     errorReason: null,
     success: response ? true : false,
-    newAccessToken: response ? generateAccessToken(response._id, response.role) : 'Refresh token not matched'
+    toastMessage: response ? 'generateAccessToken success' : 'generateAccessToken failed',
+    object: response ? generateAccessToken(response._id, response.role) : null
   }
 })
 
@@ -171,7 +173,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     error: false,
     errorReason: null,
     success: true,
-    message: 'Logout is successfully'
+    toastMessage: 'Logout is successfully'
   }
 })
 
@@ -183,7 +185,7 @@ const forgotPasswordUser = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'Missing email',
       success: false,
-      message: 'Missing email'
+      toastMessage: 'Missing email'
     }
   }
 
@@ -193,7 +195,7 @@ const forgotPasswordUser = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'Email not found',
       success: false,
-      message: 'Email not found'
+      toastMessage: 'Email not found'
     }
   }
   const resetToken = user.createPasswordChangedToken()
@@ -227,7 +229,7 @@ const resetPasswordUser = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'Missing inputs',
       success: false,
-      message: 'Missing inputs'
+      toastMessage: 'Missing inputs'
     }
   }
 
@@ -240,7 +242,7 @@ const resetPasswordUser = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'Invalid reset token',
       success: false,
-      message: 'Invalid reset token'
+      toastMessage: 'Invalid reset token'
     }
   }
 
@@ -255,7 +257,7 @@ const resetPasswordUser = asyncHandler(async (req, res) => {
     error: user ? true : false,
     errorReason: user ? 'Updated password' : 'Something went wrong',
     success: user ? true : false,
-    message: user ? 'Updated password' : 'Something went wrong'
+    toastMessage: user ? 'Updated password' : 'Something went wrong'
   }
 })
 
@@ -265,7 +267,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
     error: response ? false : true,
     errorReason: null,
     success: response ? true : false,
-    user: response
+    object: response
   }
 })
 
@@ -289,7 +291,7 @@ const deleteUser = asyncHandler(async (req, res) => {
       error: true,
       errorReason: `Invalid userID: ${_id}`,
       success: false,
-      object: `ID người dùng không hợp lệ: ${_id}`
+      toastMessage: `ID người dùng không hợp lệ: ${_id}`
     }
   }
 
@@ -320,7 +322,7 @@ const updateUser = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'Id user is not null',
       success: false,
-      object: !_id ? 'Bạn chưa truyền id user cần cập nhật' : 'Bạn chưa nhập thông tin cần cập nhật'
+      toastMessage: !_id ? 'Bạn chưa truyền id user cần cập nhật' : 'Bạn chưa nhập thông tin cần cập nhật'
     }
   }
 
@@ -334,7 +336,7 @@ const updateUser = asyncHandler(async (req, res) => {
         error: true,
         errorReason: `Key "${key}" does not exist for updating`,
         success: false,
-        object: `Key "${key}" không tồn tại để cập nhật`
+        toastMessage: `Key "${key}" không tồn tại để cập nhật`
       }
     }
   }
@@ -355,7 +357,7 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
       error: true,
       errorReason: 'Id user is not null',
       success: false,
-      object: 'Bạn chưa nhập thông tin cần cập nhật'
+      toastMessage: 'Bạn chưa nhập thông tin cần cập nhật'
     }
   }
   const response = await User.findByIdAndUpdate(uid, req.body, {new: true}).select('-password -role -refreshToken')
