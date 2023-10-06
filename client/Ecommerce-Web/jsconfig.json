@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "~/*": ["./src/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@actions/*": ["./src/actions/*"],
+      "@apis/*": ["./src/apis/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@components/*": ["./src/components/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@reducers/*": ["./src/reducers/*"],
+      "@sagas/*": ["./src/sagas/*"],
+      "@store/*": ["./src/store/*"],
+    },
+  }
+}

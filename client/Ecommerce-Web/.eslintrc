@@ -1,0 +1,26 @@
+{
+  "extends": ["react-important-stuff", "plugin:prettier/recommended"],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+    },
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": ["react"],
+  "rules": {
+    "react/jsx-uses-vars": "error",
+    "react/jsx-uses-react": "error",
+    "react/jsx-props-no-spreading": "off",
+    "strict": 0
+  },
+  "eslint.workingDirectories": ["./back", "./front"],
+  "globals": {
+    "process": true
+  }
+}
