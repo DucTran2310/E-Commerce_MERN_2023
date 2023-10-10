@@ -1,6 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{html,js,jsx}"],
+  content: [
+    "./src/**/*.{html,js,jsx}",
+    "./index.html"
+  ],
   theme: {
     fontFamily: {
       main: ['Poppins', 'sans-serif']
@@ -12,7 +15,7 @@ module.exports = {
       backgroundColor: {
         main: '#ee3131'
       },
-      color: {
+      colors: {
         main: '#ee3131'
       }
     },

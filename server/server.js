@@ -3,8 +3,18 @@ require('dotenv').config()
 const dbConnect = require('./config/dbconnect')
 const initRoutes = require('./routes')
 var cookieParser = require('cookie-parser')
+const cors = require('cors')
 
 const app = express()
+// Sử dụng cors middleware trước các route khác
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  methods: ['POST', 'PUT', 'GET', 'DELETE'],
+  credentials: true,
+  optionsSuccessStatus: 200,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(cookieParser())
 const port = process.env.PORT || 8080
 
