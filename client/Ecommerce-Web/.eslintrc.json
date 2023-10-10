@@ -20,6 +20,7 @@
     }
   },
   "rules": {
+    "import-meta": "error",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "no-console": "off",
@@ -73,6 +74,7 @@
   },
   "plugins": [
     "prettier",
-    "react-hooks"
+    "react-hooks",
+    "import-meta"
   ]
 }
