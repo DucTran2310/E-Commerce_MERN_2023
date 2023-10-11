@@ -1,10 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import createSagaMiddleware from 'redux-saga'
 import alertReducer from '~/reducers/alertReducer'
+import appReducer from '~/reducers/appReducer'
 import mainSaga from '~/sagas/saga'
 
 const rootReducer = combineReducers({
-  alertReducer
+  alertReducer,
+  appReducer
 })
 
 const sagaMiddleware = createSagaMiddleware()

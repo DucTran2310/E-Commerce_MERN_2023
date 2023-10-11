@@ -1,8 +1,9 @@
-import { Route, Routes } from "react-router-dom"
 import { Home, Login, Public } from "@pages/publics"
 import path from "@utils/path"
+import { Route, Routes } from "react-router-dom"
 
 function App() {
+
   return (
     <div className="min-h-screen font-main">
       <Routes>
