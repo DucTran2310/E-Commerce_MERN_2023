@@ -21,6 +21,7 @@
   },
   "rules": {
     "import-meta": "error",
+    "react/prop-types": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "no-console": "off",
@@ -50,7 +51,6 @@
       "single"
     ],
     "no-unexpected-multiline": "warn",
-    "react/prop-types": 0,
     "react/display-name": 0,
     "keyword-spacing": 1,
     "comma-dangle": 1,
