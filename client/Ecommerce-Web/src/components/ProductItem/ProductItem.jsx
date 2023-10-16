@@ -20,7 +20,7 @@ const ProductItem = (props) => {
   const [isShowOption, setIsShowOption] = useState(false)
 
   return (
-    <div className="w-full text-base px-[10px]">
+    <div className="w-full text-base px-[10px] cursor-pointer">
       <div
         className="w-full border p-[15px] flex flex-col items-center relative"
         onMouseEnter={
@@ -56,7 +56,7 @@ const ProductItem = (props) => {
         </div>
         <div className="flex flex-col items-start w-full gap-1 mt-[15px]">
           <span className="line-clamp-1 text-transform capitalize">{productData?.title}</span>
-          <span><ProductRating rating={productData?.totalRatings} /></span>
+          <span><ProductRating rating={productData?.totalRatings} size={'small'}/></span>
           <span>{`${formatMoney(productData?.price)} VND`}</span>
         </div>
       </div>

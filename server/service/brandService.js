@@ -94,7 +94,6 @@ const deleteBrandService = asyncHandler(async (req, res) => {
 
   // Get the schema keys of the Brand Category model
   const schemaKeys = Object.keys(Brand.schema.paths)
-  console.log('schemaKeys', schemaKeys)
 
   // Check if bid exists in the schema keys
   if (!schemaKeys.includes('_id')) {
