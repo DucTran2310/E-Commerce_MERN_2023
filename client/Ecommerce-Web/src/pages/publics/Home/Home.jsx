@@ -1,5 +1,6 @@
 import { Banner, BestSeller, Sidebar } from "~/components"
 import DealDaily from "~/components/DealDaily/DealDaily"
+import FeatureProducts from "~/components/FeatureProducts/FeatureProducts"
 
 const Home = () => {
 
@@ -14,6 +15,9 @@ const Home = () => {
           <Banner />
           <BestSeller />
         </div>
+      </div>
+      <div className="my-8">
+        <FeatureProducts />
       </div>
       <div className="w-full h-[500px]"></div>
     </>

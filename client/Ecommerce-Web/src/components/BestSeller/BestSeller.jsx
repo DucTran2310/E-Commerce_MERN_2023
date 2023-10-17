@@ -55,7 +55,7 @@ const BestSeller = () => {
             <span
               key={el.id}
               className={`
-                font-semibold capitalize px-8 border-r 
+                font-semibold uppercase px-8 border-r 
                 cursor-pointer
                 ${activedTab === el.id ? 'text-black' : 'text-gray-400'}
               `}
