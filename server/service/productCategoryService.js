@@ -47,7 +47,7 @@ const createProductCategoryService = asyncHandler(async (req, res) => {
 
 const getProductCategoriesService = asyncHandler(async (req, res) => {
 
-  const response = await ProductCategory.find().select('title _id')
+  const response = await ProductCategory.find()
 
   return {
     error: response ? false : true,
