@@ -6,6 +6,8 @@ import ProductLabel from "../ProductLabel/ProductLabel"
 import ProductRating from "../ProductRating/ProductRating"
 import SelectOption from "../SelectOption/SelectOption"
 import { useState } from "react"
+import { Link } from "react-router-dom"
+import path from "~/utils/path"
 
 const ProductItem = (props) => {
 
@@ -21,8 +23,9 @@ const ProductItem = (props) => {
 
   return (
     <div className="w-full text-base px-[10px] cursor-pointer">
-      <div
+      <Link
         className="w-full border p-[15px] flex flex-col items-center relative"
+        to={`/${path.DETAIL_PRODUCT}/${productData?._id}/${productData?.title}`}
         onMouseEnter={
           e => {
             e.stopPropagation()
@@ -59,7 +62,7 @@ const ProductItem = (props) => {
           <span><ProductRating rating={productData?.totalRatings} size={'small'}/></span>
           <span>{`${formatMoney(productData?.price)} VND`}</span>
         </div>
-      </div>
+      </Link>
     </div>
   )
 }
