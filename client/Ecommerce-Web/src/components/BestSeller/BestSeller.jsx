@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { apiGetProducts } from "~/apis/product"
-import bannerDELL from '~/assets/banner-laptop-dell.png'
-import bannerMAC from '~/assets/banner2.png'
+import bannerDELL from '~/assets/images/banner-laptop-dell.png'
+import bannerMAC from '~/assets/images/banner2.png'
 import CustomSlider from "../CustomSlider/CustomSlider";
 import { useDispatch, useSelector } from "react-redux";
 import { getNewProductsAction } from "~/actions/productAction";

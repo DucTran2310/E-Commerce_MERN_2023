@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom"
 import { Header, Navigation } from "~/components"
 import Footer from "~/components/Footer/Footer"
+import SliderBrand from "~/components/SliderBrand/SliderBrand"
 import TopHeader from "~/components/TopHeader/TopHeader"
 
 const Public = () => {
@@ -12,6 +13,7 @@ const Public = () => {
       <div className="w-main">
         <Outlet />
       </div>
+      <SliderBrand />
       <Footer />
     </div>
   )

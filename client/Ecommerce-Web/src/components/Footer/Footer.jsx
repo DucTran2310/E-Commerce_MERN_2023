@@ -1,52 +1,10 @@
 import { memo } from "react"
-import { AiFillLinkedin, AiOutlineTwitter } from "react-icons/ai"
-import { BiLogoFacebook, BiLogoFlickrSquare, BiLogoGooglePlus } from "react-icons/bi"
-import { BsPinterest, BsTelephoneFill } from "react-icons/bs"
+import { BsTelephoneFill } from "react-icons/bs"
 import { IoMail } from "react-icons/io5"
 import { MdEmail, MdLocationPin } from "react-icons/md"
+import { INFORMATION_LINKS, LIST_PRODUCT_TAGS, SOCIAL_MEDIA_ICONS, WHO_WE_ARE_LINKS } from "~/assets/footerParams/footerParams"
 
 const Footer = () => {
-  const socialMediaIcons = [
-    { icon: <BiLogoFacebook />, href: "#" },
-    { icon: <AiOutlineTwitter />, href: "#" },
-    { icon: <BsPinterest />, href: "#" },
-    { icon: <BiLogoGooglePlus />, href: "#" },
-    { icon: <AiFillLinkedin />, href: "#" },
-    { icon: <BiLogoFlickrSquare />, href: "#" },
-  ];
-
-  const informationLinks = [
-    "Typography",
-    "Gallery",
-    "Store Location",
-    "Today's Deals",
-    "Contact",
-  ];
-
-  const whoWeAreLinks = [
-    "Help",
-    "Free Shipping",
-    "FAQs",
-    "Return & Exchange",
-    "Testimonials",
-  ];
-
-  const listProductTags = [
-    "10-20",
-    "100-200",
-    "20-50",
-    "200-300",
-    "300-400",
-    "400-500",
-    "50-100",
-    "500-600",
-    "600-700",
-    "700-800",
-    "800-900",
-    "900-1000",
-    "Accessories",
-    "Acer"
-  ]
 
   return (
     <div className="w-full">
@@ -91,7 +49,7 @@ const Footer = () => {
               <span className="opacity-70">tadathemes@gmail.com</span>
             </span>
             <div className="flex items-center">
-              {socialMediaIcons.map((icon, index) => (
+              {SOCIAL_MEDIA_ICONS.map((icon, index) => (
                 <a key={index} href={icon.href} className="flex items-center justify-center w-9 h-9 text-white rounded-md bg-[#323232] text-lg mr-3">
                   {icon.icon}
                 </a>
@@ -100,13 +58,13 @@ const Footer = () => {
           </div>
           <div className="flex-1 flex flex-col gap-2 mb-[10px]">
             <h3 className="mb-[20px] text-[15px] font-medium border-l-2 border-main pl-[15px]">INFORMATION</h3>
-            {informationLinks.map((link, index) => (
+            {INFORMATION_LINKS.map((link, index) => (
               <span key={index} className="opacity-70 cursor-pointer hover:opacity-100">{link}</span>
             ))}
           </div>
           <div className="flex-1 flex flex-col gap-2 mb-[10px]">
             <h3 className="mb-[20px] text-[15px] font-medium border-l-2 border-main pl-[15px]">WHO WE ARE</h3>
-            {whoWeAreLinks.map((link, index) => (
+            {WHO_WE_ARE_LINKS.map((link, index) => (
               <span key={index} className="opacity-70 cursor-pointer hover:opacity-100">{link}</span>
             ))}
           </div>
@@ -117,7 +75,7 @@ const Footer = () => {
         <div className="w-main flex flex-col items-start">
           <h3 className="mb-[20px] text-[15px] font-medium border-l-2 border-main pl-[15px]">PRODUCT TAGS</h3>
           <ul className="w-main flex flex-wrap items-center gap-2">
-            {listProductTags.map((tag, index) => (
+            {LIST_PRODUCT_TAGS.map((tag, index) => (
               <li
                 key={index}
                 className={`opacity-70 cursor-pointer ${index === 0 ? '' : 'pl-4 ml-3 border-l border-gray-400'}`}
