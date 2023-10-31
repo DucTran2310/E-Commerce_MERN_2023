@@ -76,7 +76,6 @@ const Home = () => {
           </h3>
         </div>
       </div>
-      <div className="w-full h-[500px] bg-main">FOOTER</div>
     </>
   )
 }
