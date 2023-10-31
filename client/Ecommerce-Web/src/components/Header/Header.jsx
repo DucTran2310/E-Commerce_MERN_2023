@@ -1,4 +1,4 @@
-import logo from '@assets/logo.png'
+import logo from '@assets/images/logo.png'
 import { Link } from 'react-router-dom'
 import icons from '~/utils/icons'
 import path from '~/utils/path'

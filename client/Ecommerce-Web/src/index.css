@@ -7,11 +7,15 @@
 button.slick-next {
   right: 80px;
   z-index: 10;
+  /* top: 50%;
+  transform: translateY(-50%); */
 }
 
 button.slick-prev {
   left: 20px;
   z-index: 10;
+  /* top: 50%;
+  transform: translateY(-50%); */
 }
 
 button.slick-next::before {
