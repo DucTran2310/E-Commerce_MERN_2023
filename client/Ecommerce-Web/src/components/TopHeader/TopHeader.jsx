@@ -4,9 +4,9 @@ import path from "~/utils/path"
 const TopHeader = () => {
   return (
     <div className="h-[38px] w-full bg-main flex items-center justify-center">
-      <div className="w-main flex items-center justify-between text-xs text-white">
+      <div className="w-main flex items-center justify-between text-xs text-gray-800">
         <span>ORDER ONLINE OR CALL US (+1800) 000 8808</span>
-        <Link to={`/${path.LOGIN}`}>Sign In or Create Account</Link>
+        <Link className="hover:text-white" to={`/${path.LOGIN}`}>Sign In or Create Account</Link>
       </div>
     </div>
   )

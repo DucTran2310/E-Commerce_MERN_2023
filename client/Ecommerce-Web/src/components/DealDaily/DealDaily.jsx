@@ -5,10 +5,14 @@ import ProductRating from "../ProductRating/ProductRating"
 import { formatMoney, secondsToHms } from "~/utils/helpers"
 import CountDown from "../CountDown/CountDown"
 import moment from "moment"
+import { useDispatch } from "react-redux"
+import { endLoadingCom, loadingCom } from "~/reducers/loadingReducer"
 
 let idInterval
 
 const DealDaily = () => {
+
+  const dispatch = useDispatch()
 
   const [dealDaily, setDealDaily] = useState(null)
   const [second, setSecond] = useState(0)
@@ -17,6 +21,7 @@ const DealDaily = () => {
   const [expireTime, setExpireTime] = useState(false)
 
   const fetchDealDaily = async () => {
+    dispatch(loadingCom())
     const response = await apiGetProducts({ limit: 1, page: Math.round(Math.random() * 10), totalRatings: 5 })
     if (!response.error) {
       setDealDaily(response.object[0])
@@ -32,6 +37,7 @@ const DealDaily = () => {
       setMinute(59)
       setSecond(59)
     }
+    dispatch(endLoadingCom())
   }
 
   useEffect(() => {
