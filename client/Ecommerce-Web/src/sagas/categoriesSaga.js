@@ -5,19 +5,19 @@ import { setCategories } from "~/reducers/appReducer"
 import { endLoadingCom, loadingCom } from "~/reducers/loadingReducer"
 
 function* getListCategoriesSaga() {
-  loadingCom()
+  yield put(loadingCom())
   try {
-      const response = yield call(apiGetCategories)
+    const response = yield call(apiGetCategories)
 
-      if (response.error === false) {
-          yield put(setCategories(response.object))
-      } else {
-          yield put(setCategories([]))
-      }
-      endLoadingCom()
+    if (response.error === false) {
+      yield put(setCategories(response.object))
+    } else {
+      yield put(setCategories([]))
+    }
+    yield put(endLoadingCom())
   } catch (error) {
-    endLoadingCom()
-      console.log('ERROR: ', error)
+    yield put(endLoadingCom())
+    console.log('ERROR: ', error)
   }
 }
 

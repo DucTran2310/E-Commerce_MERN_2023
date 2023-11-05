@@ -190,7 +190,6 @@ const ratingsService = asyncHandler(async (req, res) => {
   const ratingProduct = await Product.findById(pid)
 
   const alreadyRating = ratingProduct?.ratings?.some(el => el.postedBy.toString() === _id)
-  // console.log('alreadyRating: ', alreadyRating)
 
   if (alreadyRating) {
     // update star & comment

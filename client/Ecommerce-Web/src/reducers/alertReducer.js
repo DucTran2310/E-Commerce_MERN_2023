@@ -6,8 +6,7 @@ const alertSlice = createSlice({
         notifyEventCom: {
             isOpen: false,
             notifyContent: '',
-            notifyType: 0,
-            isNoTime: false
+            notifyType: 0
         }
     },
     reducers: {
@@ -15,22 +14,14 @@ const alertSlice = createSlice({
             state.notifyEventCom.isOpen = true
             state.notifyEventCom.notifyType = 0
             state.notifyEventCom.notifyContent = action.payload
-            state.notifyEventCom.isNoTime = false
         },
         alertSuccess: (state, action) => {
             state.notifyEventCom.isOpen = true
             state.notifyEventCom.notifyType = 1
             state.notifyEventCom.notifyContent = action.payload
-            state.notifyEventCom.isNoTime = false
         },
         endAlert: (state) => {
             state.notifyEventCom.isOpen = false
-        },
-        setNoTimeNotify: (state, action) => {
-            state.notifyEventCom.isOpen = true
-            state.notifyEventCom.notifyType = 0
-            state.notifyEventCom.notifyContent = action.payload
-            state.notifyEventCom.isNoTime = true
         }
     }
 })
@@ -39,7 +30,6 @@ export const {
     alertError, 
     alertSuccess, 
     endAlert, 
-    setNoTimeNotify 
 } =
   alertSlice.actions
 

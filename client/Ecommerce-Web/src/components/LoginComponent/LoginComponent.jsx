@@ -9,7 +9,8 @@ const LoginComponent = (props) => {
   const {
     handleSubmit,
     showPassword,
-    handleClickShowPassword
+    setIsForgotPass,
+    handleClickShowPassword,
   } = props;
 
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ const LoginComponent = (props) => {
   }
 
   const handleForgotPassword = () => {
-    // Handle forgot password logic here
+    setIsForgotPass(true)
   };
 
   return (

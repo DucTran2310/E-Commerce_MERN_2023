@@ -121,7 +121,6 @@ export const appSlice = createSlice({
 
 
     setUser: (state, action) => {
-      console.log('VVVACTION', action)
       state.isLoggedIn = action.payload.isLoggedIn
       state.current = action.payload.userData
       state.token = action.payload.token

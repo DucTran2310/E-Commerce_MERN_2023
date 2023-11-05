@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from "react-redux"
 import Loading from "./components/Loading/Loading"
 import NotifySnackbar from "./components/NotifySnackbar/NotifySnackbar"
 import { endAlertCom } from "./actions/alertAction"
+import FinalRegister from "./pages/publics/FinalRegister/FinalRegister"
+import ResetPassword from "./pages/publics/ResetPassword/ResetPassword"
 
 function App() {
 
@@ -28,7 +30,9 @@ function App() {
           <Route path={path.DETAIL_PRODUCT__PID__TITLE} element={<DetailProduct />} />
           <Route path={path.FAQ} element={<FAQ />} />
           <Route path={path.OUR_SERVICES} element={<Services />} />
+          <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
         </Route>
+        <Route path={path.FINAL_REGISTER} element={<FinalRegister />} />
         <Route path={path.LOGIN} element={<Login />} />
       </Routes>
       {loadingCom === true ? <Loading /> : ''}
@@ -39,7 +43,6 @@ function App() {
         }}
         notifyType={notifyEventCom.notifyType}
         content={notifyEventCom.notifyContent}
-        isNoTime={notifyEventCom.isNoTime}
       />
     </div>
   )

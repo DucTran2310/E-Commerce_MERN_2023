@@ -13,6 +13,7 @@ const {
 const jwt = require('jsonwebtoken')
 const sendMail = require('../utils/sendMail')
 const crypto = require('crypto')
+const makeToken = require('uniqid')
 
 // async function registerUser(userData) 
 const registerUser = asyncHandler(async (req, res) => {
@@ -56,12 +57,55 @@ const registerUser = asyncHandler(async (req, res) => {
     }
   }
 
-  const response = await User.create(req.body)
+  res.header("Access-Control-Allow-Headers", "*");
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+
+  const token = makeToken()
+  res.cookie('dataregister', { ...req.body, token }, { httpOnly: true, maxAge: 15 * 60 * 1000, sameSite: 'None', secure: true })
+  const html = `Xin vui lòng click vào link dưới đây để hoàn tất quá trình đăng ký.
+                Link này sẽ hết hạn sau 15 phút kể từ bây giờ. 
+                <a href=${process.env.URL_SERVER}/api/user/finalRegister/${token}>
+                Nhấn vào đây
+                </a>`
+
+  const data = {
+    email,
+    html,
+    subject: 'Hoàn tất đăng ký tài khoản'
+  }
+
+  const result = await sendMail(data)
+
   return {
-    error: response ? false : true,
-    errorReason: null,
-    success: response ? true : false,
-    toastMessage: response ? 'Register successfully.' : 'Something went wrong.'
+    error: false,
+    success: true,
+    toastMessage: 'Please check your email to active account'
+  }
+})
+
+const finalRegister = asyncHandler(async (req, res) => {
+  const cookie = req.cookies
+  const { token } = req.params
+
+  if (!cookie || cookie?.dataregister?.token !== token) {
+    res.clearCookie('dataregister')
+    return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+  }
+
+  const newUser = await User.create({
+    email: cookie?.dataregister?.email,
+    password: cookie?.dataregister?.password,
+    firstName: cookie?.dataregister?.firstName,
+    lastName: cookie?.dataregister?.lastName,
+    mobile: cookie?.dataregister?.mobile,
+  })
+
+  res.clearCookie('dataregister')
+  if (newUser) {
+    return res.redirect(`${process.env.CLIENT_URL}/finalregister/success`)
+  } else {
+    return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
   }
 })
 
@@ -179,47 +223,49 @@ const logoutUser = asyncHandler(async (req, res) => {
 })
 
 const forgotPasswordUser = asyncHandler(async (req, res) => {
-  const email = req.query
+  const { email } = req.body; // Destructure the email property from req.body
 
   if (!email) {
-    return {
+    return res.status(400).json({
       error: true,
       errorReason: 'Missing email',
       success: false,
       toastMessage: 'Missing email'
-    }
+    });
   }
 
-  const user = await User.findOne(email)
+  const user = await User.findOne({ email });
   if (!user) {
-    return {
+    return res.status(404).json({
       error: true,
-      errorReason: 'Email not found',
+      errorReason: 'User not found',
       success: false,
-      toastMessage: 'Email not found'
-    }
+      toastMessage: 'User not found'
+    });
   }
-  const resetToken = user.createPasswordChangedToken()
-  await user.save()
+
+  const resetToken = user.createPasswordChangedToken();
+  await user.save();
 
   const html = `Xin vui lòng click vào link dưới đây để thay đổi mật khẩu của bạn.
                 Link này sẽ hết hạn sau 15 phút kể từ bây giờ. 
-                <a href=${process.env.URL_SERVER}/api/user/reset-password/${resetToken}>
+                <a href=${process.env.CLIENT_URL}/resetpassword/${resetToken}>
                 Nhấn vào đây
-                </a>`
+                </a>`;
 
   const data = {
     email,
-    html
-  }
-  const result = await sendMail(data)
+    html,
+    subject: 'Forgot password'
+  };
+  const result = await sendMail(data);
 
   return {
+    error: false,
     success: true,
     result
-  }
-
-})
+  };
+});
 
 const resetPasswordUser = asyncHandler(async (req, res) => {
   const { password, token } = req.body
@@ -474,6 +520,7 @@ const updateCartService = asyncHandler(async (req, res) => {
 
 module.exports = {
   registerUser,
+  finalRegister,
   loginUser,
   getCurrentUser,
   refreshAccessTokenUser,

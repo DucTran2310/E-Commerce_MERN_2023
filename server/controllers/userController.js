@@ -7,6 +7,12 @@ const register = async function (req, res) {
   sendResponse(res, response)
 }
 
+const finalRegisterController = async function (req, res) {
+  const response = await userService.finalRegister(req, res)
+
+  sendResponse(res, response)
+}
+
 const login = async function (req, res) {
   const response = await userService.loginUser(req, res)
 
@@ -81,6 +87,7 @@ const updateUserCartController = async function (req, res) {
 
 module.exports = {
   register,
+  finalRegisterController,
   login,
   getCurrent,
   refreshAccessToken,
