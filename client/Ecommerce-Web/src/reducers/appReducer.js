@@ -24,6 +24,8 @@ export const appSlice = createSlice({
     },
 
     isLoggedIn: false,
+    isForgotPass: false,
+    isModalSendEmail: false,
     current: null,
     token: null
   },
@@ -124,6 +126,12 @@ export const appSlice = createSlice({
       state.isLoggedIn = action.payload.isLoggedIn
       state.current = action.payload.userData
       state.token = action.payload.token
+    },
+    setIsForgotPass: (state, action) => {
+      state.isForgotPass = action.payload
+    },
+    setIsModalSendEmail: (state, action) => {
+      state.isModalSendEmail = action.payload
     }
   }
 })
@@ -138,7 +146,9 @@ export const {
   setLastName,
   setPasswordConfirm,
   resetStateSignUp,
-  setUser
+  setUser,
+  setIsForgotPass,
+  setIsModalSendEmail
 } = appSlice.actions
 
 const appReducer = appSlice.reducer

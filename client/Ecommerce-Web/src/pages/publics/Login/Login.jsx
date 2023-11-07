@@ -1,27 +1,25 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerAction } from '~/actions/userAction';
+import { forgotPasswordAction, registerAction } from '~/actions/userAction';
 import img from '~/assets/images/bannerLogin.png';
 import LoginComponent from '~/components/LoginComponent/LoginComponent';
+import ModalCheckEmail from '~/components/ModalCheckEmail/ModalCheckEmail';
+import ModalForgotPass from '~/components/ModalForgotPass/ModalForgotPass';
 import Register from '~/components/Register/Register';
 import { resetStateSignUp, setEmail, setIsRegister } from '~/reducers/appReducer';
 import { isValidEmail } from '~/utils/helpers';
-import { useLocation } from 'react-router-dom'
-import { apiForgotPassword } from '~/apis/user';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 
 const Login = () => {
 
-  const location = useLocation()
-
   const {
-    stateSignUpAndSignIn
+    stateSignUpAndSignIn,
+    isForgotPass,
+    isModalSendEmail
   } = useSelector(state => state.appReducer)
 
   const dispatch = useDispatch()
 
   const [showPassword, setShowPassword] = useState(false)
-  const [isForgotPass, setIsForgotPass] = useState(false)
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword)
@@ -39,7 +37,7 @@ const Login = () => {
     const data = {
       email: stateSignUpAndSignIn.email
     }
-    const response = await apiForgotPassword(data)
+    dispatch(forgotPasswordAction(data))
   }
 
   const handleSubmit = (() => {
@@ -66,42 +64,17 @@ const Login = () => {
   return (
     <>
       <div className="min-h-screen py-40 bg-gradient-to-r from-purple-500 to-pink-300 relative">
-        {isForgotPass && (
-          <div className="fixed top-0 left-0 bottom-0 right-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 animate-fadeIn duration-500">
-            <div className="h-[300px] w-[500px] bg-white p-8 rounded-lg shadow-lg relative">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-semibold text-gray-800">Forgot Password</h2>
-                <button
-                  type="button"
-                  className="text-gray-600 hover:text-gray-800 focus:text-gray-800 focus:outline-none"
-                  onClick={() => setIsForgotPass(false)}
-                >
-                  <CloseOutlinedIcon />
-                </button>
-              </div>
-              <label htmlFor="email" className="text-lg font-semibold text-gray-800">
-                Enter your email:
-              </label>
-              <div className="flex items-center border-b border-gray-300 mb-12 mt-4">
-                <input
-                  type="text"
-                  id="email"
-                  className="w-full px-4 py-2 border-0 outline-none placeholder-gray-400 text-gray-800"
-                  placeholder="e.g., email@gmail.com"
-                  value={stateSignUpAndSignIn.email}
-                  onChange={handleChangeEmailForgot}
-                />
-              </div>
-              <button
-                type="button"
-                className="w-full px-4 py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 focus:bg-purple-600 focus:outline-none"
-                onClick={handleForgotPassword}
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        )}
+        {isForgotPass &&
+          (
+            <ModalForgotPass
+              handleChangeEmailForgot={handleChangeEmailForgot}
+              handleForgotPassword={handleForgotPassword}
+            />
+          )
+        }
+        {
+          isModalSendEmail && <ModalCheckEmail />
+        }
         <div className="container mx-auto">
           <div className="flex flex-col lg:flex-row w-10/12 lg:w-full bg-white rounded-xl mx-auto shadow-lg overflow-hidden">
             <div
@@ -131,7 +104,6 @@ const Login = () => {
                 <LoginComponent
                   handleSubmit={handleSubmit}
                   showPassword={showPassword}
-                  setIsForgotPass={setIsForgotPass}
                   handleClickShowPassword={handleClickShowPassword}
                 />
               )}

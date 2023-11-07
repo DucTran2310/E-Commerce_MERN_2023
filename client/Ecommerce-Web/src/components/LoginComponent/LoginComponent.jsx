@@ -3,13 +3,12 @@ import { FaEnvelope, FaFacebook } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginAction } from '~/actions/userAction';
 import Input from '~/components/Input/Input';
-import { setEmail, setPassword } from '~/reducers/appReducer';
+import { setEmail, setIsForgotPass, setPassword } from '~/reducers/appReducer';
 
 const LoginComponent = (props) => {
   const {
     handleSubmit,
     showPassword,
-    setIsForgotPass,
     handleClickShowPassword,
   } = props;
 
@@ -40,7 +39,7 @@ const LoginComponent = (props) => {
   }
 
   const handleForgotPassword = () => {
-    setIsForgotPass(true)
+    dispatch(setIsForgotPass(true))
   };
 
   return (

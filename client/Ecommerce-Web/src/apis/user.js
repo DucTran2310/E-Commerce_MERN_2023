@@ -18,3 +18,9 @@ export const apiForgotPassword = (data) => EcommerceInstance({
   method: 'post',
   data
 })
+
+export const apiResetPassword = (data) => EcommerceInstance({
+  url: '/user/resetpassword',
+  method: 'put',
+  data
+})

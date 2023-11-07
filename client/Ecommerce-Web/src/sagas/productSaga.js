@@ -1,6 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects"
 import { getNewProductsAction } from "~/actions/productAction"
 import { apiGetProducts } from "~/apis/product"
+import { alertError } from "~/reducers/alertReducer"
 import { endLoadingCom, loadingCom } from "~/reducers/loadingReducer"
 import { setProducts } from "~/reducers/productReducer"
 
@@ -16,8 +17,8 @@ function* getNewProductsSaga() {
     }
     yield put(endLoadingCom())
   } catch (error) {
-    console.log('ERROR: ', error)
     yield put(endLoadingCom())
+    yield put(alertError('Vui lòng thử lại hoặc liên hệ IT để được hỗ trợ'))
   }
 }
 
