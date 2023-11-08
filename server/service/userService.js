@@ -57,25 +57,41 @@ const registerUser = asyncHandler(async (req, res) => {
     }
   }
 
-  res.header("Access-Control-Allow-Headers", "*");
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  // res.header("Access-Control-Allow-Headers", "*");
+  // res.header('Access-Control-Allow-Credentials', true);
+  // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
 
   const token = makeToken()
-  res.cookie('dataregister', { ...req.body, token }, { httpOnly: true, maxAge: 15 * 60 * 1000, sameSite: 'None', secure: true })
-  const html = `Xin vui lòng click vào link dưới đây để hoàn tất quá trình đăng ký.
-                Link này sẽ hết hạn sau 15 phút kể từ bây giờ. 
-                <a href=${process.env.URL_SERVER}/api/user/finalRegister/${token}>
-                Nhấn vào đây
-                </a>`
 
-  const data = {
-    email,
-    html,
-    subject: 'Hoàn tất đăng ký tài khoản'
+  //gắn token vào cookie
+  // res.cookie('dataregister', { ...req.body, token }, { httpOnly: true, maxAge: 15 * 60 * 1000, sameSite: 'None', secure: true })
+  // const html = `Xin vui lòng click vào link dưới đây để hoàn tất quá trình đăng ký.
+  //               Link này sẽ hết hạn sau 15 phút kể từ bây giờ. 
+  //               <a href=${process.env.URL_SERVER}/api/user/finalRegister/${token}>
+  //               Nhấn vào đây
+  //               </a>`
+
+  //đưa token cho người dùng
+  const emailEdited = btoa(email) + '@' + token
+  const newUser = await User.create({
+    email: emailEdited,
+    password, lastName, firstName, mobile
+  })
+
+  if (newUser) {
+    const html = `<h2>Register code:</h2><br /><blockquote>${token}</blockquote>`
+    const data = {
+      email,
+      html,
+      subject: 'Xác nhận đăng ký tài khoản web ecommerce'
+    }
+
+    const result = await sendMail(data)
   }
 
-  const result = await sendMail(data)
+  setTimeout(async () => {
+    await User.deleteOne({email: emailEdited})
+  }, [300000])
 
   return {
     error: false,
@@ -85,28 +101,45 @@ const registerUser = asyncHandler(async (req, res) => {
 })
 
 const finalRegister = asyncHandler(async (req, res) => {
-  const cookie = req.cookies
+  // const cookie = req.cookies
+
+  // if (!cookie || cookie?.dataregister?.token !== token) {
+  //   res.clearCookie('dataregister')
+  //   return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+  // }
+
+  // const newUser = await User.create({
+  //   email: cookie?.dataregister?.email,
+  //   password: cookie?.dataregister?.password,
+  //   firstName: cookie?.dataregister?.firstName,
+  //   lastName: cookie?.dataregister?.lastName,
+  //   mobile: cookie?.dataregister?.mobile,
+  // })
+
+  // res.clearCookie('dataregister')
+
+  // if (newUser) {
+  //   return res.redirect(`${process.env.CLIENT_URL}/finalregister/success`)
+  // } else {
+  //   return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+  // }
+
   const { token } = req.params
 
-  if (!cookie || cookie?.dataregister?.token !== token) {
-    res.clearCookie('dataregister')
-    return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+  const notActiveEmail = await User.findOne ({ email: new RegExp(`${token}$`) })
+
+  if (notActiveEmail) {
+    notActiveEmail.email = atob(notActiveEmail.email.split('@')[0])
+    notActiveEmail.save( )
   }
 
-  const newUser = await User.create({
-    email: cookie?.dataregister?.email,
-    password: cookie?.dataregister?.password,
-    firstName: cookie?.dataregister?.firstName,
-    lastName: cookie?.dataregister?.lastName,
-    mobile: cookie?.dataregister?.mobile,
-  })
-
-  res.clearCookie('dataregister')
-  if (newUser) {
-    return res.redirect(`${process.env.CLIENT_URL}/finalregister/success`)
-  } else {
-    return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+  return {
+    error: notActiveEmail ? false : true,
+    errorReason: notActiveEmail ? 'Register successfully' : 'Not found User',
+    success: notActiveEmail ? true : false,
+    toastMessage: notActiveEmail ? 'Register successfully' : 'Something went wrong, please try again. '
   }
+
 })
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -226,22 +259,22 @@ const forgotPasswordUser = asyncHandler(async (req, res) => {
   const { email } = req.body; // Destructure the email property from req.body
 
   if (!email) {
-    return res.status(400).json({
+    return {
       error: true,
       errorReason: 'Missing email',
       success: false,
       toastMessage: 'Missing email'
-    });
+    }
   }
 
   const user = await User.findOne({ email });
   if (!user) {
-    return res.status(404).json({
+    return {
       error: true,
       errorReason: 'User not found',
       success: false,
       toastMessage: 'User not found'
-    });
+    }
   }
 
   const resetToken = user.createPasswordChangedToken();
@@ -263,7 +296,8 @@ const forgotPasswordUser = asyncHandler(async (req, res) => {
   return {
     error: false,
     success: true,
-    result
+    result,
+    toastMessage: result.response?.includes('OK') ? 'Hãy check mail của bạn' : 'Đã có lỗi xảy ra, vui lòng thử lại'
   };
 });
 
@@ -301,7 +335,7 @@ const resetPasswordUser = asyncHandler(async (req, res) => {
   await user.save()
 
   return {
-    error: user ? true : false,
+    error: user ? false : true,
     errorReason: user ? 'Updated password' : 'Something went wrong',
     success: user ? true : false,
     toastMessage: user ? 'Updated password' : 'Something went wrong'

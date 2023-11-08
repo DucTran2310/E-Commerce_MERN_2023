@@ -4,7 +4,7 @@ import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
 import { useEffect, useState } from "react";
 import { FaEnvelope } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { setEmail, setFirstName, setLastName, setNumber, setPassword, setPasswordConfirm } from "~/reducers/appReducer";
+import { setEmail, setFirstName, setIsRegister, setLastName, setNumber, setPassword, setPasswordConfirm } from "~/reducers/appReducer";
 import Input from "../Input/Input";
 import { isValidNumberInput } from "~/utils/helpers";
 
@@ -64,6 +64,10 @@ const Register = (props) => {
 
   const handleClickShowPasswordConfirm = () => {
     setShowPasswordConfirm(!stateSignUpAndSignIn.passwordConfirm)
+  }
+
+  const handleChangeLogin = () => {
+    dispatch(setIsRegister(true))
   }
 
   return (
@@ -154,7 +158,7 @@ const Register = (props) => {
                 showPasswordConfirm ? <VisibilityOff /> : <Visibility />
             }
             handleChange={handleChangePasswordConfirm}
-          />
+          /> 
         </div>
         <div className="mt-5">
           <button
@@ -164,6 +168,16 @@ const Register = (props) => {
             Register Now
           </button>
         </div>
+
+        <p className="mt-4 text-center">
+          Already have an account? 
+          <span
+            className="login-link cursor-pointer text-purple-600 hover:text-purple-600 hover:underline"
+            onClick={handleChangeLogin}
+          >
+            Login
+          </span>
+        </p>
       </form>
     </div>
   );

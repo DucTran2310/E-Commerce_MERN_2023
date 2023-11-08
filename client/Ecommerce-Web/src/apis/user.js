@@ -7,6 +7,11 @@ export const apiRegister = (data) => EcommerceInstance({
   withCredentials: true
 })
 
+export const apiFinalRegister = (token) => EcommerceInstance({
+  url: '/user/finalregister/' + token,
+  method: 'put' 
+})
+
 export const apiLogin = (data) => EcommerceInstance({
   url: '/user/login',
   method: 'post',

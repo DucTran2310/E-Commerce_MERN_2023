@@ -1,7 +1,7 @@
 import { call, delay, put, takeLatest } from "redux-saga/effects"
 import Swal from "sweetalert2"
 import { forgotPasswordAction, loginAction, registerAction, resetPasswordAction } from "~/actions/userAction"
-import { apiForgotPassword, apiLogin, apiRegister, apiResetPassword } from "~/apis/user"
+import { apiFinalRegister, apiForgotPassword, apiLogin, apiRegister, apiResetPassword } from "~/apis/user"
 import { alertError } from "~/reducers/alertReducer"
 import { resetStateSignUp, setIsForgotPass, setIsModalSendEmail, setUser } from "~/reducers/appReducer"
 import { endLoadingCom, loadingCom } from "~/reducers/loadingReducer"
@@ -12,8 +12,37 @@ function* registerSaga(action) {
   try {
     const response = yield call(apiRegister, action.payload)
     if (response.error === false) {
-      Swal.fire('Congratulation', response.toastMessage, 'success')
       yield put(resetStateSignUp())
+
+      Swal.fire({
+        title: "We sent a code to your email. Please check your email and enter your code",
+        input: "text",
+        inputAttributes: {
+          autocapitalize: "off"
+        },
+        showCancelButton: true,
+        confirmButtonText: "Submit",
+        showLoaderOnConfirm: true,
+        preConfirm: async (token) => {
+          try {
+            const response = await apiFinalRegister(token)
+            if (response.error === false) {
+              Swal.fire('Congratulation', response.toastMessage, 'success')
+            } else {
+              throw new Error(response.toastMessage);
+            }
+          } catch (error) {
+            Swal.showValidationMessage(`
+              Error: ${error}
+            `);
+          }
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+      }).then((result) => {
+        if (result.value.error === false) {
+          Swal.fire('Congratulation', response.toastMessage, 'success')
+        }
+      });
     } else {
       Swal.fire('Opps!', response.toastMessage, 'error')
     }
