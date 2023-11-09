@@ -1,9 +1,9 @@
 import { call, delay, put, takeLatest } from "redux-saga/effects"
 import Swal from "sweetalert2"
-import { forgotPasswordAction, loginAction, registerAction, resetPasswordAction } from "~/actions/userAction"
-import { apiFinalRegister, apiForgotPassword, apiLogin, apiRegister, apiResetPassword } from "~/apis/user"
+import { forgotPasswordAction, getCurrentUserAction, loginAction, registerAction, resetPasswordAction } from "~/actions/userAction"
+import { apiFinalRegister, apiForgotPassword, apiGetCurrent, apiLogin, apiRegister, apiResetPassword } from "~/apis/user"
 import { alertError } from "~/reducers/alertReducer"
-import { resetStateSignUp, setIsForgotPass, setIsModalSendEmail, setUser } from "~/reducers/appReducer"
+import { resetStateSignUp, setCurrentUser, setIsForgotPass, setIsModalSendEmail, setUser } from "~/reducers/appReducer"
 import { endLoadingCom, loadingCom } from "~/reducers/loadingReducer"
 import path from "~/utils/path"
 
@@ -107,9 +107,26 @@ function* resetPasswordSaga(action) {
   }
 }
 
+function* getCurrentSaga(action) {
+  yield put(loadingCom())
+  try {
+    const response = yield call(apiGetCurrent, action.payload)
+    if (response.error === false) {
+      yield put(setCurrentUser(response.object))
+    } else {
+      yield put(alertError(response.toastMessage))
+    }
+    yield put(endLoadingCom())
+  } catch (error) {
+    yield put(endLoadingCom())
+    yield put(alertError('Vui lòng thử lại hoặc liên hệ IT để được hỗ trợ'))
+  }
+}
+
 export default function* userSaga() {
   yield takeLatest(registerAction.type, registerSaga)
   yield takeLatest(loginAction.type, loginSaga)
   yield takeLatest(forgotPasswordAction.type, forgotPasswordSaga)
   yield takeLatest(resetPasswordAction.type, resetPasswordSaga)
+  yield takeLatest(getCurrentUserAction.type, getCurrentSaga)
 }

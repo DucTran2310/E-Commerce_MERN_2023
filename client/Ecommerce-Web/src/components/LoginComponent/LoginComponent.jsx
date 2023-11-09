@@ -1,9 +1,11 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { FaEnvelope, FaFacebook } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { loginAction } from '~/actions/userAction';
 import Input from '~/components/Input/Input';
 import { setEmail, setIsForgotPass, setPassword } from '~/reducers/appReducer';
+import path from '~/utils/path';
 
 const LoginComponent = (props) => {
   const {
@@ -99,6 +101,9 @@ const LoginComponent = (props) => {
           <a href="#" onClick={handleSubmit} className="text-purple-500 font-normal hover:underline">Create account</a>
         </div>
       </form>
+      <div className="flex flex-col items-center">
+        <Link className='text-blue-500 text-sm hover:underline cursor-pointer' to={`/${path.HOME}`}>Go home</Link>
+      </div>
     </div>
   );
 };
