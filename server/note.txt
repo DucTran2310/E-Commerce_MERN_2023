@@ -5,6 +5,7 @@
   ==> client gửi API kèm token
   ==> check token có giống với token mà server đã gửi mail hay không
   ==> cho user thay đổi password
+  EMAIL_APP_PASSWORD = mdzbbzbioeqtycuy
 
 Install các thư viện npm cần thiết:
 - cloudinary - thư viện quản lý hình ảnh hoàn chỉnh

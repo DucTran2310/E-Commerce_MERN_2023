@@ -5,6 +5,7 @@ import bannerMAC from '~/assets/images/banner2.png'
 import CustomSlider from "../CustomSlider/CustomSlider";
 import { useDispatch, useSelector } from "react-redux";
 import { getNewProductsAction } from "~/actions/productAction";
+import { endLoadingCom, loadingCom } from "~/reducers/loadingReducer";
 
 
 const tabs = [
@@ -22,8 +23,10 @@ const BestSeller = () => {
   const [products, setProducts] = useState(null)
 
   const fetchProducts = async () => {
+    dispatch(loadingCom())
     const response = await Promise.all([apiGetProducts({ sort: '-sold' })])
     if (response[0]?.success) {
+      dispatch(endLoadingCom())
       setBestSellers(response[0].object)
       setProducts(response[0].object)
     }

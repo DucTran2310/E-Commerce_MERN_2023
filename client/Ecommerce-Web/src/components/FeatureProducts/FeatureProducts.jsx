@@ -5,14 +5,20 @@ import feature1 from '~/assets/images/feature1.png'
 import feature2 from '~/assets/images/feature2.png'
 import feature3 from '~/assets/images/feature3.png'
 import feature4 from '~/assets/images/feature4.png'
+import { useDispatch } from "react-redux"
+import { endLoadingCom, loadingCom } from "~/reducers/loadingReducer"
 
 const FeatureProducts = () => {
+
+  const dispatch = useDispatch()
 
   const [products, setProducts] = useState(null)
 
   const fetchProducts = async () => {
+    dispatch(loadingCom())
     const response = await apiGetProducts({ limit: 9, totalRatings: 5 })
     if (!response.error) setProducts(response.object)
+    dispatch(endLoadingCom())
   }
 
   useEffect(() => {

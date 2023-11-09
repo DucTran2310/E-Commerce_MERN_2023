@@ -13,7 +13,8 @@ module.exports = {
         main: '1220px'
       },
       backgroundColor: {
-        main: '#ee3131'
+        main: '#ee3131',
+        overlay: 'rgba(0,0,0,0.3)'
       },
       colors: {
         main: '#ee3131'
@@ -30,19 +31,28 @@ module.exports = {
       keyframes: {
         'slide-top': {
           '0%': {
-            '-webkit-transform': 'translateY(40px);',
-            transform: 'translateY(20px);'
+            transform: 'translateY(40px)',
           },
           '100%': {
-            '-webkit-transform': 'translateY(0px);',
-            transform: 'translateY(0px);'
-          }
-        }
+            transform: 'translateY(0)',
+          },
+        },
+        'fadeIn': {
+          '0%': {
+            opacity: 0,
+            transform: 'translateY(-20px)',
+          },
+          '100%': {
+            opacity: 1,
+            transform: 'translateY(0)',
+          },
+        },
       },
       animation: {
-          'slide-top': 'slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both'
-      }
+        'slide-top': 'slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
+        'fadeIn': 'fadeIn 0.3s both',
+      },
     },
   },
   plugins: [],
-}
+};

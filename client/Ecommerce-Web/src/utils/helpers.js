@@ -42,3 +42,16 @@ export function secondsToHms(d) {
   const s = Math.floor(d % 3600 % 60)
   return ({ h, m, s })
 }
+
+export function isValidEmail(email) {
+  // Regular expression to validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  return emailRegex.test(email)
+}
+
+export const isValidNumberInput = (input) => {
+  const numberRegex = /^[0-9]+$/; // Biểu thức chính quy để kiểm tra số
+
+  return numberRegex.test(input);
+};
