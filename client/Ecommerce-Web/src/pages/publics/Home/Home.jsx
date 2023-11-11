@@ -4,6 +4,7 @@ import CustomSlider from "~/components/CustomSlider/CustomSlider";
 import DealDaily from "~/components/DealDaily/DealDaily";
 import FeatureProducts from "~/components/FeatureProducts/FeatureProducts";
 import { AiOutlineRight } from "react-icons/ai"
+import SliderBrand from "~/components/SliderBrand/SliderBrand";
 
 const Home = () => {
 
@@ -12,7 +13,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="w-main flex">
+      <div className="w-main flex mt-6">
         <div className="flex flex-col gap-5 w-[25%] flex-auto">
           <Sidebar />
           <DealDaily />
@@ -75,6 +76,7 @@ const Home = () => {
             BLOG POSTS
           </h3>
         </div>
+        <SliderBrand />
       </div>
     </>
   )

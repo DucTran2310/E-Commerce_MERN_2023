@@ -5,3 +5,8 @@ export const apiGetProducts = (params) => EcommerceInstance({
   method: 'get',
   params
 })
+
+export const apiGetDetailProduct = (pid) => EcommerceInstance({
+  url: '/product/' + pid,
+  method: 'get'
+})

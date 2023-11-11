@@ -51,7 +51,7 @@ const getProductService = asyncHandler(async (req, res) => {
     error: product ? false : true,
     errorReason: product ? 'Get detail product successfully' : 'Get detail product failed',
     success: product ? true : false,
-    toastMessage: newProduct ? 'Lấy chi tiết sản phẩm thành công' : 'Lấy chi tiết sản phẩm thất bại',
+    toastMessage: product ? 'Lấy chi tiết sản phẩm thành công' : 'Lấy chi tiết sản phẩm thất bại',
     object: product ? product : null
   }
 })

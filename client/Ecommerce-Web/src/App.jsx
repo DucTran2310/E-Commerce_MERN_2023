@@ -19,7 +19,6 @@ function App() {
   const { notifyEventCom } = useSelector((state) => state.alertReducer)
 
   const dispatch = useDispatch()
-
   return (
     <div className="min-h-screen font-main">
       <Routes>
@@ -27,7 +26,7 @@ function App() {
           <Route path={path.HOME} element={<Home />} />
           <Route path={path.BLOGS} element={<Blogs />} />
           <Route path={path.PRODUCTS} element={<Products />} />
-          <Route path={path.DETAIL_PRODUCT__PID__TITLE} element={<DetailProduct />} />
+          <Route path={path.DETAIL_PRODUCT__CATEGORY__PID__TITLE} element={<DetailProduct />} />
           <Route path={path.FAQ} element={<FAQ />} />
           <Route path={path.OUR_SERVICES} element={<Services />} />
         </Route>
