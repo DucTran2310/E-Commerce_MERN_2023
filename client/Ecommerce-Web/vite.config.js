@@ -24,6 +24,14 @@ export default defineConfig(({ mode }) => {
         { find: '@sagas', replacement: '/src/sagas' },
         { find: '@store', replacement: '/src/store' },
       ]
-    }
+    },
+    // Đảm bảo cấu hình esbuild để xử lý các tệp .jsx
+    esbuild: {
+      // ...
+      loaders: {
+        '.js': 'jsx',
+        '.jsx': 'jsx', // Cấu hình esbuild để xử lý tệp .jsx
+      },
+    },
   }
 })

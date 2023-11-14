@@ -1,13 +1,12 @@
+import { useState } from "react"
 import { AiFillHeart } from "react-icons/ai"
 import { BiMenu } from "react-icons/bi"
 import { BsEyeFill } from "react-icons/bs"
+import { Link } from "react-router-dom"
 import { formatMoney } from "~/utils/helpers"
 import ProductLabel from "../ProductLabel/ProductLabel"
 import ProductRating from "../ProductRating/ProductRating"
 import SelectOption from "../SelectOption/SelectOption"
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import path from "~/utils/path"
 
 const ProductItem = (props) => {
 
@@ -25,7 +24,7 @@ const ProductItem = (props) => {
     <div className="w-full text-base px-[10px] cursor-pointer">
       <Link
         className="w-full border p-[15px] flex flex-col items-center relative"
-        to={`/${path.DETAIL_PRODUCT}/${productData?._id}/${productData?.title}`}
+        to={`/${productData?.category?.toLowerCase()}/${productData?._id}/${productData?.title}`}
         onMouseEnter={
           e => {
             e.stopPropagation()
