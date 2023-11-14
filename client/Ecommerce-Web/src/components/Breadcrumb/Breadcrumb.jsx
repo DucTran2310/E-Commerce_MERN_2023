@@ -14,8 +14,6 @@ const Breadcrumb = (props) => {
 
   const breadcrumb = useBreadcrumbs(routes)
  
-  console.log('breadcrumb: ', breadcrumb)
-
   return (
     <div className='text-sm flex items-center gap-1'>
       {
