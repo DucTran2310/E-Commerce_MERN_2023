@@ -19,6 +19,7 @@ function App() {
   const { notifyEventCom } = useSelector((state) => state.alertReducer)
 
   const dispatch = useDispatch()
+
   return (
     <div className="min-h-screen font-main">
       <Routes>

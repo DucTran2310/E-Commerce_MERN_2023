@@ -76,13 +76,10 @@ const DetailProduct = () => {
 
   const fetchProducts = async () => {
     const rs = await apiGetProducts({ category })
-    console.log('VVVRS: ', rs)
     if (!rs.error) {
       setProductRelated(rs.object)
     }
   }
-  console.log('VVVcategory: ', category)
-  console.log('VVVproductRelated: ', productRelated)
 
   useEffect(() => {
     if (pid) {
