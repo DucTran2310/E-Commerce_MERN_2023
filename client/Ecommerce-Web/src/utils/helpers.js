@@ -55,3 +55,7 @@ export const isValidNumberInput = (input) => {
 
   return numberRegex.test(input);
 };
+
+export function capitalizedStr (str) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}

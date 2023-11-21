@@ -5,6 +5,8 @@ import Breadcrumb from "~/components/Breadcrumb/Breadcrumb"
 import Masonry from 'react-masonry-css'
 import ProductItem from "~/components/ProductItem/ProductItem"
 import SearchItem from "~/components/SearchItem/SearchItem"
+import { capitalizedStr } from "~/utils/helpers"
+import { useSearchParams } from "react-router-dom"
 
 const breakpointColumnsObj = {
   default: 4,
@@ -16,20 +18,36 @@ const breakpointColumnsObj = {
 const Products = () => {
 
   const { category } = useParams()
+  const [params] = useSearchParams()
 
   const [products, setProducts] = useState(null)
   const [activeClick, setActiveClick] = useState(null)
 
   const fetchProductByCategory = async (queries) => {
-    const response = await apiGetProducts({ queries })
+    const response = await apiGetProducts(queries)
     if (!response.error) {
       setProducts(response.object)
     }
   }
 
   useEffect(() => {
-    fetchProductByCategory()
-  }, [])
+    let param = []
+    for (let i of params.entries()) {
+      param.push(i)
+    }
+    const queries = {}
+    for (let i of params) {
+      queries[i[0]] = i[1]
+    }
+
+    console.log('VVVqueries', queries)
+
+    if (Object.keys(queries).length === 0) {
+      fetchProductByCategory({category: capitalizedStr(category)})
+    } else {
+      fetchProductByCategory(queries)
+    }
+  }, [params])
 
   const changeActiveFilter = useCallback((name) => {
     if (activeClick === name) {
@@ -51,8 +69,17 @@ const Products = () => {
         <div className="w-4/5 flex-auto flex flex-col gap-3">
           <span className="font-semibold text-sm">Filter by</span>
           <div className="flex items-center gap-4">
-            <SearchItem name='Price' activeClick={activeClick} changeActiveFilter={changeActiveFilter}/>
-            <SearchItem name='Color' activeClick={activeClick} changeActiveFilter={changeActiveFilter}/>
+            <SearchItem
+              name='Price'
+              activeClick={activeClick}
+              changeActiveFilter={changeActiveFilter}
+              type='input'
+            />
+            <SearchItem
+              name='Color'
+              activeClick={activeClick}
+              changeActiveFilter={changeActiveFilter}
+            />
           </div>
         </div>
         <div className="w-1/5 flex">
