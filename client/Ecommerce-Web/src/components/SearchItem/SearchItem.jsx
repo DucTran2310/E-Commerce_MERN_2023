@@ -18,12 +18,16 @@ const SearchItem = (props) => {
   const [selected, setSelected] = useState([])
 
   useEffect(() => {
-    navigate({
-      pathname:  `/${category}`,
-      search: createSearchParams({
-        color: selected
-      }).toString()
-    })
+    if(selected.length > 0) {
+      navigate({
+        pathname:  `/${category}`,
+        search: createSearchParams({
+          color: selected.join(',')
+        }).toString()
+      })
+    } else {
+      navigate(`/${category}`)
+    }
   }, [selected])
 
   const handleSelect = (e) => {

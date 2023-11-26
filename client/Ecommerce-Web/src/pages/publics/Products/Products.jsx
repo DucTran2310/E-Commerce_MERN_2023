@@ -40,8 +40,6 @@ const Products = () => {
       queries[i[0]] = i[1]
     }
 
-    console.log('VVVqueries', queries)
-
     if (Object.keys(queries).length === 0) {
       fetchProductByCategory({category: capitalizedStr(category)})
     } else {
