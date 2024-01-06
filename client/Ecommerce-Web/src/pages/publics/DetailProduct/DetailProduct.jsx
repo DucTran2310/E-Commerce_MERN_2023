@@ -63,6 +63,7 @@ const DetailProduct = () => {
 
   const { pid, title, category } = useParams()
 
+  const [currentImage, setCurrentImage] = useState(null)
   const [quantity, setQuantity] = useState(1)
   const [product, setProduct] = useState(null)
   const [productRelated, setProductRelated] = useState(null)
@@ -71,6 +72,7 @@ const DetailProduct = () => {
     const rs = await apiGetDetailProduct(pid)
     if (!rs.error) {
       setProduct(rs.object)
+      setCurrentImage(rs.object?.thumb)
     }
   }
 
@@ -105,6 +107,10 @@ const DetailProduct = () => {
     }
   }, [quantity])
 
+  const handleClickImage = (imageThumb) => {
+    setCurrentImage(imageThumb)
+  }
+
   return (
     <div className="w-full">
       <div className="h-[81px] flex justify-center items-center bg-gray-100">
@@ -117,26 +123,28 @@ const DetailProduct = () => {
         product &&
         <div className="w-main m-auto mt-4 flex">
           <div className="flex flex-col gap-4 w-2/5">
-            <div className="h-[458px] w-[458px] border">
+            <div className="h-[458px] w-[458px] border overflow-hidden">
               <ReactImageMagnify {...{
                 smallImage: {
                   alt: 'Image original',
                   isFluidWidth: true,
-                  src: product?.thumb
+                  src: currentImage
                 },
                 largeImage: {
-                  src: product?.thumb,
+                  src: currentImage,
                   width: 1800,
                   height: 1500
                 }
               }} />
             </div>
             <div className="w-[458px]">
-              <Slider {...settings} className="image-slider">
+              <Slider {...settings} className="image-slider flex gap-2 justify-between">
                 {
                   product?.images?.map((el, index) => (
-                    <div key={index} className="flex w-full gap-2">
-                      <img src={el} alt="sub-product" className="w-[143px] h-[143px] border object-cover" />
+                    <div key={index} className="flex-1">
+                      <img onClick={() => handleClickImage(el)} src={el} alt="sub-product" 
+                        className="w-[143px] h-[143px] border object-cover cursor-pointer" 
+                      />
                     </div>
                   ))
                 }
@@ -183,7 +191,7 @@ const DetailProduct = () => {
         </div>
       }
       <div className="w-main m-auto mt-8">
-        <ProductInformation />
+        <ProductInformation totalRatings={product?.totalRatings} totalCount={18}/>
       </div>
       <div className="w-main m-auto mt-8">
         <h3 className="text-[20px] font-semibold py-[15px] border-b-2 border-main">OTHER CUSTOMER ALSO LIKE</h3>
