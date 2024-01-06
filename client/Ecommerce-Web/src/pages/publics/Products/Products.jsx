@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useState } from "react"
+import Masonry from 'react-masonry-css'
 import { useParams } from "react-router"
+import { useSearchParams } from "react-router-dom"
 import { apiGetProducts } from "~/apis/product"
 import Breadcrumb from "~/components/Breadcrumb/Breadcrumb"
-import Masonry from 'react-masonry-css'
+import InputSelect from "~/components/InputSelect/InputSelect"
 import ProductItem from "~/components/ProductItem/ProductItem"
 import SearchItem from "~/components/SearchItem/SearchItem"
+import { sorts } from "~/utils/constants"
 import { capitalizedStr } from "~/utils/helpers"
-import { useSearchParams } from "react-router-dom"
 
 const breakpointColumnsObj = {
   default: 4,
@@ -22,6 +24,7 @@ const Products = () => {
 
   const [products, setProducts] = useState(null)
   const [activeClick, setActiveClick] = useState(null)
+  const [sort, setSort] = useState('')
 
   const fetchProductByCategory = async (queries) => {
     const response = await apiGetProducts(queries)
@@ -40,12 +43,44 @@ const Products = () => {
       queries[i[0]] = i[1]
     }
 
-    if (Object.keys(queries).length === 0) {
-      fetchProductByCategory({category: capitalizedStr(category)})
-    } else {
-      fetchProductByCategory(queries)
+    let priceQuery = {}
+    if (queries.from && queries.to) {
+      priceQuery = {
+        $and: [
+          {price: {gte: queries.from}},
+          {price: {lte: queries.to}}
+        ]
+      }
+      delete queries.price
+      delete queries.from
+      delete queries.to
     }
-  }, [params])
+   
+    if (queries.from) {
+      queries.price = {gte: queries.from}
+      delete queries.from
+    }
+    if (queries.to) {
+      queries.price = {lte: queries.to}
+      delete queries.to
+    }
+
+
+    if (Object.keys(priceQuery).length > 0) {
+      fetchProductByCategory({...priceQuery, ...queries, category: capitalizedStr(category), sort})
+    } else if (Object.keys(queries).length === 0) {
+      fetchProductByCategory({category: capitalizedStr(category), sort})
+    } else if (Object.keys(priceQuery).length === 0 && Object.keys(queries).length > 0) {
+      fetchProductByCategory({...queries, category: capitalizedStr(category), sort})
+    }
+  }, [params, sort])
+
+  // useEffect(() => {
+  //   navigate({
+  //     pathname: `/${category}`,
+  //     search: createSearchParams({sort}).toString()
+  //   })
+  // }, [sort])
 
   const changeActiveFilter = useCallback((name) => {
     if (activeClick === name) {
@@ -54,6 +89,10 @@ const Products = () => {
       setActiveClick(name)
     }
   }, [activeClick])
+
+  const changeValue = useCallback((value) => {
+    setSort(value)
+  }, [sort])
 
   return (
     <div className="w-full">
@@ -80,8 +119,11 @@ const Products = () => {
             />
           </div>
         </div>
-        <div className="w-1/5 flex">
-          Sort by
+        <div className="w-1/5 flex flex-col gap-3">
+          <span className="font-semibold text-sm">Sort by</span>
+          <div className="w-full">
+            <InputSelect changeValue={changeValue} value={sort} options={sorts}/>
+          </div>
         </div>
       </div>
       <div className="mt-8 w-main m-auto">

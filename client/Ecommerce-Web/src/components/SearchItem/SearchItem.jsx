@@ -4,6 +4,9 @@ import { colors } from '~/utils/constants'
 import { createSearchParams, useNavigate, useParams } from 'react-router-dom'
 import { apiGetProducts } from '~/apis/product'
 import { formatMoney } from '~/utils/helpers'
+import useDebounce from '~/hooks/useDebounce'
+import { useDispatch } from 'react-redux'
+import { alertError } from '~/reducers/alertReducer'
 
 const SearchItem = (props) => {
 
@@ -16,10 +19,14 @@ const SearchItem = (props) => {
 
   const navigate = useNavigate()
   const { category } = useParams()
+  const dispatch = useDispatch()
 
   const [selected, setSelected] = useState([])
   const [bestPrice, setBestPrice] = useState(null)
-  const [price, setPrice] = useState([0, 0])
+  const [price, setPrice] = useState({
+    from: '',
+    to: ''
+  })
 
   useEffect(() => {
     if (selected.length > 0) {
@@ -45,17 +52,26 @@ const SearchItem = (props) => {
     if (type === 'input') fetchBestPriceProduct()
   }, [type])
 
-  useEffect(() => {
-    // const validPrice = price.filter(el => +el > 0)
+  const debouncePriceFrom = useDebounce(price.from, 500)
+  const debouncePriceTo = useDebounce(price.to, 500)
 
-    // if (price[0] > 0) {
-    //   navigate({
-    //     pathname: `/${category}`,
-    //     search: createSearchParams(price).toString()
-    //   })
-    // } else {
-    //   navigate(`/${category}`)
-    // }
+  useEffect(() => {
+    const data = {}
+
+    if (Number(price.from) > 0) data.from = price.from
+    if (Number(price.to) > 0) data.to = price.to
+
+    navigate({
+      pathname: `/${category}`,
+      search: createSearchParams(data).toString()
+    })
+
+  }, [debouncePriceFrom, debouncePriceTo])
+
+  useEffect(() => {
+    if (price.from > price.to && Number(price.from) > 0 && Number(price.to) > 0 ) {
+      dispatch(alertError('From price cannot greater than To price'))
+    }
   }, [price])
 
   const handleSelect = (e) => {
@@ -123,7 +139,8 @@ const SearchItem = (props) => {
                 <span
                   onClick={(e) => {
                     e.stopPropagation()
-                    setSelected([])
+                    setPrice({from: '', to: ''})
+                    changeActiveFilter(null)
                   }}
                   className='underline cursor-pointer hover:text-main'
                 >
@@ -137,8 +154,8 @@ const SearchItem = (props) => {
                     className='form-input'
                     type='number'
                     id='from'
-                    value={price[0]}
-                    onChange={e => setPrice(prev => prev.map((el, index) => index === 0 ? e.target.value : el))}
+                    value={price.from}
+                    onChange={e => setPrice(prev => ({...prev, from: e.target.value}))}
                   />
                 </div>
                 <div className='flex items-center gap-2'>
@@ -147,8 +164,8 @@ const SearchItem = (props) => {
                     className='form-input'
                     type='number'
                     id='to'
-                    value={price[1]}
-                    onChange={e => setPrice(prev => prev.map((el, index) => index === 1 ? e.target.value : el))}
+                    value={price.to}
+                    onChange={e => setPrice(prev => ({...prev, to: e.target.value}))}
                   />
                 </div>
               </div>
