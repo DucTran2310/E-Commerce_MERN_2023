@@ -88,6 +88,7 @@ const DetailProduct = () => {
       fetchProductData()
       fetchProducts()
     }
+    window.scrollTo(0,0)
   }, [pid])
 
   const handleQuantity = useCallback((number) => {
@@ -142,8 +143,8 @@ const DetailProduct = () => {
                 {
                   product?.images?.map((el, index) => (
                     <div key={index} className="flex-1">
-                      <img onClick={() => handleClickImage(el)} src={el} alt="sub-product" 
-                        className="w-[143px] h-[143px] border object-cover cursor-pointer" 
+                      <img onClick={() => handleClickImage(el)} src={el} alt="sub-product"
+                        className="w-[143px] h-[143px] border object-cover cursor-pointer"
                       />
                     </div>
                   ))
@@ -191,7 +192,7 @@ const DetailProduct = () => {
         </div>
       }
       <div className="w-main m-auto mt-8">
-        <ProductInformation totalRatings={product?.totalRatings} totalCount={18}/>
+        <ProductInformation totalRatings={product?.totalRatings} totalCount={18} nameProduct={product?.title}/>
       </div>
       <div className="w-main m-auto mt-8">
         <h3 className="text-[20px] font-semibold py-[15px] border-b-2 border-main">OTHER CUSTOMER ALSO LIKE</h3>

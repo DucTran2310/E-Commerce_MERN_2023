@@ -27,7 +27,9 @@ export const appSlice = createSlice({
     isForgotPass: false,
     isModalSendEmail: false,
     current: null,
-    token: null
+    token: null,
+    isShowModal: false,
+    modalChildren: null
   },
   reducers: {
     setCategories: (state, action) => {
@@ -138,6 +140,15 @@ export const appSlice = createSlice({
     logOutUser: (state ) => {
       state.isLoggedIn = false
       state.token = null
+    },
+
+    // modal
+    setShowModal: (state, action) => {
+      const {modalChildren, isShowModal} = action.payload
+
+
+      state.isShowModal = isShowModal
+      state.modalChildren = modalChildren
     }
   }
 })
@@ -156,7 +167,8 @@ export const {
   setIsForgotPass,
   setIsModalSendEmail,
   setCurrentUser,
-  logOutUser
+  logOutUser,
+  setShowModal
 } = appSlice.actions
 
 const appReducer = appSlice.reducer

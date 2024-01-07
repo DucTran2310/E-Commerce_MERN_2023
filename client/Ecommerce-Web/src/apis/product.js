@@ -10,3 +10,9 @@ export const apiGetDetailProduct = (pid) => EcommerceInstance({
   url: '/product/' + pid,
   method: 'get'
 })
+
+export const apiGetRatings = (data) => EcommerceInstance({
+  url: '/product/ratings',
+  method: 'put',
+  data
+})

@@ -12,16 +12,27 @@ import NotifySnackbar from "./components/NotifySnackbar/NotifySnackbar"
 import { endAlertCom } from "./actions/alertAction"
 import FinalRegister from "./pages/publics/FinalRegister/FinalRegister"
 import ResetPassword from "./pages/publics/ResetPassword/ResetPassword"
+import Modal from "./components/Modal/Modal"
+import { useEffect } from "react"
+import { getCategoriesAction } from "./actions/appActions"
 
 function App() {
 
   const { loadingCom } = useSelector((state) => state.loadingReducer)
   const { notifyEventCom } = useSelector((state) => state.alertReducer)
+  const { modalChildren, isShowModal } = useSelector((state) => state.appReducer)
 
   const dispatch = useDispatch()
 
+  useEffect(() => {
+    dispatch(getCategoriesAction())
+  }, [])
+
   return (
-    <div className="min-h-screen font-main">
+    <div className="font-main relative">
+      {
+        isShowModal && <Modal>{modalChildren}</Modal>
+      }
       <Routes>
         <Route path={path.PUBLIC} element={<Public />} >
           <Route path={path.HOME} element={<Home />} />
